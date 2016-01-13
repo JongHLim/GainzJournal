@@ -42,7 +42,8 @@ public class Workout {
     
     // return the date of current workout
     public String getDate() {
-        return this.workoutDate.toString();
+        String strings[] = this.workoutDate.toString().split(" ");
+        return strings[1] + " " + strings[2] + ", " + strings[5];
     }
     
 }
