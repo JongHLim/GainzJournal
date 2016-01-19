@@ -11,8 +11,8 @@ package my.gainzjournaltesting;
  * @author jhl2298
  */
 
-import my.gainzjournal.Workout;
-import my.gainzjournal.Exercise;
+import my.gainzjournal.datastructures.Workout;
+import my.gainzjournal.datastructures.Exercise;
 import java.util.ArrayList;
 public class WorkoutTesting {
     

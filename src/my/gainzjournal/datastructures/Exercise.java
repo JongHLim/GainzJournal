@@ -1,4 +1,4 @@
-package my.gainzjournal;
+package my.gainzjournal.datastructures;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

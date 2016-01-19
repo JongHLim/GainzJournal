@@ -1,4 +1,4 @@
-package my.gainzjournal;
+package my.gainzjournal.datastructures;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -6,6 +6,7 @@ package my.gainzjournal;
  * and open the template in the editor.
  */
 
+import my.gainzjournal.datastructures.Exercise;
 import java.util.Date;
 import java.util.ArrayList;
 
