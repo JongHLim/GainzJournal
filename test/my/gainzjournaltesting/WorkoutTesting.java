@@ -1,3 +1,5 @@
+package my.gainzjournaltesting;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -9,6 +11,8 @@
  * @author jhl2298
  */
 
+import my.gainzjournal.Workout;
+import my.gainzjournal.Exercise;
 import java.util.ArrayList;
 public class WorkoutTesting {
     
