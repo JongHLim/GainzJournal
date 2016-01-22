@@ -3,10 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/jhl2298/Documents/GainzJournal/src/my/gainzjournal/Exercise.java</file>
+            <file>file:/C:/Users/jhl2298/Documents/GainzJournal/src/my/gainzjournal/datastructures/Workout.java</file>
+            <file>file:/C:/Users/jhl2298/Documents/GainzJournal/src/my/gainzjournal/AppMain.java</file>
+            <file>file:/C:/Users/jhl2298/Documents/GainzJournal/src/my/gainzjournal/datastructures/Exercise.java</file>
             <file>file:/C:/Users/jhl2298/Documents/GainzJournal/src/my/gainzjournal/GainzJournalUI.java</file>
-            <file>file:/C:/Users/jhl2298/Documents/GainzJournal/src/my/gainzjournal/Workout.java</file>
             <file>file:/C:/Users/jhl2298/Documents/GainzJournal/test/my/gainzjournaltesting/WorkoutTesting.java</file>
+            <file>file:/C:/Users/jhl2298/Documents/GainzJournal/src/my/gainzjournal/GainzJournalBean.java</file>
         </group>
     </open-files>
 </project-private>

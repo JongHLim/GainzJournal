@@ -29,7 +29,7 @@ public class GainzJournalBean {
             rowSet.setUrl(DB_URL);
             rowSet.setUsername(DB_USER);
             rowSet.setPassword(DB_PASS);
-            rowSet.setCommand("SELECT * FROM Workouts");
+            rowSet.setCommand("SELECT * FROM Workout");
             rowSet.execute();
         }
         catch (SQLException | ClassNotFoundException ex) {

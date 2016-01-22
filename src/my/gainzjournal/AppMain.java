@@ -15,6 +15,7 @@ import javax.swing.UIManager.*;
 
 public class AppMain {
     public static void main(String[] args) {
+        // set the "nimbus look and feel" to match the UI design
         try {
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -26,6 +27,7 @@ public class AppMain {
             // If Nimbus is not available, you can set the GUI to another look and feel.
         }
         
+        // open the user interface
         GainzJournalUI ui = new GainzJournalUI();
         ui.setVisible(true);
     }
