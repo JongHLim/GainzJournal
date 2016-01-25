@@ -13,6 +13,7 @@ package my.gainzjournal;
 import java.sql.*;
 import javax.sql.rowset.JdbcRowSet;
 import com.sun.rowset.JdbcRowSetImpl;
+import my.gainzjournal.datastructures.*;
 
 public class GainzJournalBean {
     // JDBC driver name and database URL
@@ -36,4 +37,26 @@ public class GainzJournalBean {
             ex.printStackTrace();
         }
     }
+    
+    public Workout create(Workout w) {
+        // ***** FINISH OTHERS *****
+        try {
+            rowSet.moveToInsertRow();
+            rowSet.updateInt("workoutId", w.getWorkoutId());
+            rowSet.updateString("date", w.getDate());
+            rowSet.updateString("workoutType", w.getWorkoutType());
+            // ***** FINISH OTHERS *****
+            rowSet.insertRow();
+            rowSet.moveToCurrentRow();
+        } catch (SQLException ex) {
+            try {
+            rowSet.rollback();
+            w = null;
+         } catch (SQLException e) {
+
+         }
+         ex.printStackTrace();
+      }
+      return w;
+   }
 }

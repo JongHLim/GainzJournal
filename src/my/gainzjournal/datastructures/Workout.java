@@ -29,7 +29,6 @@ public class Workout {
     // parameter is the workout type
     public Workout() {
         // date of workout
-        this.workoutDate = new Date();
         this.exercises = new ArrayList<>();
     }
     

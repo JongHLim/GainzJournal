@@ -21,7 +21,8 @@ public class WorkoutTesting {
     }
     
     public static void WorkoutTest1() {
-        Workout workout1 = new Workout("Chest");
+        Workout workout1 = new Workout();
+        workout1.setWorkoutType("Chest");
         System.out.println(workout1.getDate());
         System.out.println("Workout type is " + workout1.getWorkoutType() + ".");
         

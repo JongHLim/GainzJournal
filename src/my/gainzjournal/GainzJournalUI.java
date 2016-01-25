@@ -13,6 +13,10 @@ package my.gainzjournal;
 
 import my.gainzjournal.datastructures.*;
 import static javax.swing.ScrollPaneConstants.*;
+import javax.swing.*;
+import java.util.Random;
+import java.awt.event.*;
+import java.awt.event.ActionEvent;
 
 public class GainzJournalUI extends javax.swing.JFrame {
 
@@ -28,13 +32,15 @@ public class GainzJournalUI extends javax.swing.JFrame {
     
     /*
      * since the NetBeans IDE uses code folding, use my method to initialize
-     * componenets
+     * components
      */
     public void myInitComponents() {
         // get rid of horizontal scroll for jScrollPane1
         jScrollPane1.setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
         // make ID not editable
         workoutIdField.setEnabled(false);
+        
+        newButton.addActionListener(new ButtonHandler()); 
     }
 
     private Workout getFieldData() {
@@ -46,10 +52,20 @@ public class GainzJournalUI extends javax.swing.JFrame {
         return w;
     }
     
-       private void setFieldData(Workout w) {
-           workoutIdField.setText(String.valueOf(w.getWorkoutId()));
-           // ***** do the rest *****
-       }
+    private void setFieldData(Workout w) {
+        workoutIdField.setText(String.valueOf(w.getWorkoutId()));
+        // ***** do the rest *****
+    }
+       
+    private boolean isEmptyFieldData() {
+        return (workoutDateField.getText().trim().isEmpty()
+            && workoutIdField.getText().trim().isEmpty()
+            && workoutTypeField.getText().trim().isEmpty()
+            && exerciseField.getText().trim().isEmpty()
+            && weightField.getText().trim().isEmpty()
+            && setsField.getText().trim().isEmpty()
+            && repsField.getText().trim().isEmpty());
+   }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -93,11 +109,6 @@ public class GainzJournalUI extends javax.swing.JFrame {
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
         newButton.setText("New");
-        newButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newButtonActionPerformed(evt);
-            }
-        });
         jPanel1.add(newButton, new java.awt.GridBagConstraints());
 
         updateButton.setText("Update");
@@ -122,12 +133,6 @@ public class GainzJournalUI extends javax.swing.JFrame {
 
         jLabel2.setText("Workout type");
 
-        weightField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                weightFieldActionPerformed(evt);
-            }
-        });
-
         jLabel3.setText("Exercise");
 
         jLabel4.setText("Weight");
@@ -137,12 +142,6 @@ public class GainzJournalUI extends javax.swing.JFrame {
         jLabel5.setText("Sets");
 
         jLabel6.setText("Reps");
-
-        repsField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                repsFieldActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -265,18 +264,44 @@ public class GainzJournalUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void repsFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repsFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_repsFieldActionPerformed
-
-    private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_newButtonActionPerformed
-
-    private void weightFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_weightFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_weightFieldActionPerformed
-
+    private class ButtonHandler implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        	
+        	Workout w;
+        	if (workoutIdField.getText().equals(""))
+            	w = new Workout();
+        	else
+        		w = getFieldData();
+        	
+            switch (e.getActionCommand()) {
+                case "Save":
+                    // fields are empty
+                    if (isEmptyFieldData()) {
+                        JOptionPane.showMessageDialog(null, "Cannot create an empty workout entry.");
+                        return;
+                    }
+                    if (bean.create(w) != null) {
+                        JOptionPane.showMessageDialog(null, "New person created successfully.");
+                        newButton.setText("New");
+                        break;
+                    }
+                // new workout entry
+                case "New":
+                    w.setWorkoutId(new Random().nextInt(Integer.MAX_VALUE) + 1);
+                    w.setDate("");
+                    w.setWorkoutType("");
+                    // **** FINISH OTHERS *****
+                    setFieldData(w);
+                    newButton.setText("Save");
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(null,
+                    "invalid command");
+            }
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
