@@ -54,6 +54,8 @@ public class GainzJournalUI extends javax.swing.JFrame {
     
     private void setFieldData(Workout w) {
         workoutIdField.setText(String.valueOf(w.getWorkoutId()));
+        workoutDateField.setText(w.getDate());
+        workoutTypeField.setText(w.getWorkoutType());
         // ***** do the rest *****
     }
        
@@ -142,6 +144,10 @@ public class GainzJournalUI extends javax.swing.JFrame {
         jLabel5.setText("Sets");
 
         jLabel6.setText("Reps");
+        
+        jButton2.setText("Add exercise");
+
+        jLabel7.setText("Workout ID");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -188,10 +194,6 @@ public class GainzJournalUI extends javax.swing.JFrame {
                     .addComponent(jButton1))
                 .addContainerGap())
         );
-
-        jButton2.setText("Add exercise");
-
-        jLabel7.setText("Workout ID");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);

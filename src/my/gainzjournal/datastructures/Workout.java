@@ -38,8 +38,10 @@ public class Workout {
     
         // return the date of current workout
     public String getDate() {
-        String strings[] = this.workoutDate.toString().split(" ");
-        return strings[1] + " " + strings[2] + ", " + strings[5];
+    	// for date automation... decided not to use
+//        String strings[] = this.workoutDate.toString().split(" ");
+//        return strings[1] + " " + strings[2] + ", " + strings[5];
+    	return this.workoutDate;
     }
     
     public void setWorkoutId(int id) {
