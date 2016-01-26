@@ -14,53 +14,92 @@ package my.gainzjournal.datastructures;
 import java.util.ArrayList;
 
 public class Exercise {
-            
+
+	private int exerciseId;
+    private int workoutId;
     private String exerciseName;
 
-    private ArrayList<String> setsAndReps;
+    public Exercise() {
 
-    public Exercise(String name) {
-        this.exerciseName = name;
-        this.setsAndReps = new ArrayList<>();
+    }
+    
+    public void setExerciseId(int eid) {
+    	exerciseId = eid;
+    }
+    
+    public int getExerciseId() {
+    	return this.exerciseId;
+    }
+    
+    public void setWorkoutId(int id) {
+    	workoutId = id;
+    }
+    
+    public int getWorkoutId() {
+    	return this.workoutId;
+    }
+    
+    public void setExerciseName(String name) {
+    	exerciseName = name;
     }
     
     public String getExerciseName() {
         return this.exerciseName;
     }
-
-    // enable the user to add the weight lifted, number of sets and number of reps
-    // e.g., 145 lbs x 10 sets x 10 reps
-    public Exercise addSetsReps(int weightLifted, int numSets, int numReps) {
-        WeightSetsByReps currentSets = new WeightSetsByReps(weightLifted, numSets, numReps);
-        this.setsAndReps.add(currentSets.toString());
-        return this;
-    }
-    
-    public ArrayList<String> getSetsReps() {
-        return this.setsAndReps;
-    }
         
     // data structure to represent the weight, sets and reps for an exercise
     public class WeightSetsByReps {
 
+    	private int setsId;
+    	private int exerciseId;
         private int weight;
         private int sets;
         private int reps;
 
-        public WeightSetsByReps(int weightLifted, int numSets, int numReps) {
-            weight = weightLifted;
-            sets = numSets;
-            reps = numReps;
-        }
-        
-        // for example: 135 lbs x 1 x 10
-        public String toString() {
-            String weight = Integer.toString(this.weight);
-            String sets = Integer.toString(this.sets);
-            String reps = Integer.toString(this.reps);
-            return weight + " lbs x " + sets + " sets x " + reps + " reps";
+        public WeightSetsByReps() {
+
         }
 
+        public void setSetsId(int sid) {
+        	setsId = sid;
+        }
+        
+        public int getSetsId() {
+        	return this.setsId;
+        }
+        
+        public void setExerciseId(int eid) {
+        	exerciseId = eid;
+        }
+        
+        public int getExerciseId() {
+        	return this.exerciseId;
+        }
+        
+        public void setWeight(int weightNumber) {
+        	weight = weightNumber;
+        }
+        
+        public int getWeight() {
+        	return this.weight;
+        }
+        
+        public void setSets(int setNumber) {
+        	sets = setNumber;
+        }
+        
+        public int getSets() {
+        	return this.sets;
+        }
+        
+        public void setReps(int repNumber) {
+        	reps = repNumber;
+        }
+        
+        public int getReps() {
+        	return this.reps;
+        }
+        
     }
         
 }

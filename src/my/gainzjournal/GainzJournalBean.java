@@ -38,11 +38,6 @@ public class GainzJournalBean {
         }
     }
     
-    // insert exercises, sets, reps
-    public void insertSetsReps(Workout w) {
-    	
-    }
-    
     // when the user clicks "Save"
     public Workout create(Workout w) {
         try {
@@ -52,7 +47,12 @@ public class GainzJournalBean {
             rowSet.updateInt("workoutId", w.getWorkoutId());
             rowSet.updateString("date", w.getDate());
             rowSet.updateString("workoutType", w.getWorkoutType());
-            // ***** FINISH OTHERS *****
+            
+            // Exercise ID, Workout ID, exercise
+            rowSet.setCommand("SELECT * FROM Exercise");
+            rowSet.execute();
+            rowSet.updateInt("workoutId", w.getWorkoutId());
+            
             rowSet.insertRow();
             rowSet.moveToCurrentRow();
         } catch (SQLException ex) {
