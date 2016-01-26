@@ -38,13 +38,20 @@ public class GainzJournalBean {
         }
     }
     
+    // insert exercises, sets, reps
+    public void insertSetsReps(Workout w) {
+    	
+    }
+    
     // when the user clicks "Save"
     public Workout create(Workout w) {
         try {
+            rowSet.setCommand("SELECT * FROM Workout");
+            rowSet.execute();
             rowSet.moveToInsertRow();
             rowSet.updateInt("workoutId", w.getWorkoutId());
             rowSet.updateString("date", w.getDate());
-             rowSet.updateString("workoutType", w.getWorkoutType());
+            rowSet.updateString("workoutType", w.getWorkoutType());
             // ***** FINISH OTHERS *****
             rowSet.insertRow();
             rowSet.moveToCurrentRow();
@@ -64,6 +71,8 @@ public class GainzJournalBean {
     public Workout update(Workout w) {
 	    try {
 	    	// no need to update the ID
+            rowSet.setCommand("SELECT * FROM Workout");
+            rowSet.execute();
 	        rowSet.updateString("date", w.getDate());
 	        rowSet.updateString("workoutType", w.getWorkoutType());
 	        // ***** FINISH OTHERS *****
@@ -82,6 +91,8 @@ public class GainzJournalBean {
     
     public void delete() {
         try {
+            rowSet.setCommand("SELECT * FROM Workout");
+            rowSet.execute();
            rowSet.moveToCurrentRow();
            rowSet.deleteRow();
         } catch (SQLException ex) {
@@ -96,6 +107,8 @@ public class GainzJournalBean {
     public Workout getCurrent() {
         Workout w = new Workout();
         try {
+            rowSet.setCommand("SELECT * FROM Workout");
+            rowSet.execute();
             rowSet.moveToCurrentRow();
             w.setWorkoutId(rowSet.getInt("workoutId"));
             w.setDate(rowSet.getString("date"));
@@ -111,6 +124,8 @@ public class GainzJournalBean {
     public Workout moveFirst() {
         Workout w = new Workout();
         try {
+            rowSet.setCommand("SELECT * FROM Workout");
+            rowSet.execute();
            rowSet.first();
            w.setWorkoutId(rowSet.getInt("workoutId"));
            w.setDate(rowSet.getString("date"));
@@ -126,6 +141,8 @@ public class GainzJournalBean {
      public Workout moveLast() {
         Workout w = new Workout();
         try {
+            rowSet.setCommand("SELECT * FROM Workout");
+            rowSet.execute();
            rowSet.last();
            w.setWorkoutId(rowSet.getInt("workoutId"));
            w.setDate(rowSet.getString("date"));
@@ -140,6 +157,8 @@ public class GainzJournalBean {
      public Workout moveNext() {
         Workout w = new Workout();
         try {
+            rowSet.setCommand("SELECT * FROM Workout");
+            rowSet.execute();
            if (rowSet.next() == false)
               rowSet.previous();
            w.setWorkoutId(rowSet.getInt("workoutId"));
@@ -155,6 +174,8 @@ public class GainzJournalBean {
      public Workout movePrevious() {
         Workout w = new Workout();
         try {
+            rowSet.setCommand("SELECT * FROM Workout");
+            rowSet.execute();
            if (rowSet.previous() == false)
               rowSet.next();
            w.setWorkoutId(rowSet.getInt("workoutId"));

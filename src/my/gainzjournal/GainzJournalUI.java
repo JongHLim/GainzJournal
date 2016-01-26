@@ -191,8 +191,10 @@ public class GainzJournalUI extends javax.swing.JFrame {
         setsField = new javax.swing.JTextField();
         repsField = new javax.swing.JTextField();
         
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        // "Add more sets and reps" Button
+        addMoreSetsButton = new javax.swing.JButton();
+        // "Add exercise" Button
+        addExerciseButton = new javax.swing.JButton();
         
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
@@ -240,7 +242,7 @@ public class GainzJournalUI extends javax.swing.JFrame {
 
         jLabel4.setText("Weight");
 
-        jButton1.setText("Add more sets and reps");
+        addMoreSetsButton.setText("Add more sets and reps");
 
         jLabel5.setText("Sets");
 
@@ -270,7 +272,7 @@ public class GainzJournalUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(repsField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)))
+                        .addComponent(addMoreSetsButton)))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -288,11 +290,11 @@ public class GainzJournalUI extends javax.swing.JFrame {
                     .addComponent(setsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
                     .addComponent(repsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(addMoreSetsButton))
                 .addContainerGap())
         );
 
-        jButton2.setText("Add exercise");
+        addExerciseButton.setText("Add exercise");
 
         jLabel7.setText("Workout ID");
 
@@ -320,7 +322,7 @@ public class GainzJournalUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(workoutIdField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2)
+                    .addComponent(addExerciseButton)
                     .addComponent(jLabel8))
                 .addContainerGap(69, Short.MAX_VALUE))
         );
@@ -342,7 +344,7 @@ public class GainzJournalUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
+                .addComponent(addExerciseButton)
                 .addContainerGap(89, Short.MAX_VALUE))
         );
 
@@ -418,8 +420,8 @@ public class GainzJournalUI extends javax.swing.JFrame {
     private javax.swing.JButton previousButton;
     private javax.swing.JButton updateButton;
     
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton addMoreSetsButton;
+    private javax.swing.JButton addExerciseButton;
     
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
