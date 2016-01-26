@@ -38,8 +38,8 @@ public class GainzJournalBean {
         }
     }
     
+    // when the user clicks "Save"
     public Workout create(Workout w) {
-        // ***** FINISH OTHERS *****
         try {
             rowSet.moveToInsertRow();
             rowSet.updateInt("workoutId", w.getWorkoutId());
@@ -50,13 +50,120 @@ public class GainzJournalBean {
             rowSet.moveToCurrentRow();
         } catch (SQLException ex) {
             try {
-            rowSet.rollback();
-            w = null;
-         } catch (SQLException e) {
+	            rowSet.rollback();
+	            w = null;
+            } catch (SQLException e) {
 
-         }
+            }
          ex.printStackTrace();
       }
       return w;
    }
+    
+    // when the user clicks "Update"
+    public Workout update(Workout w) {
+	    try {
+	    	// no need to update the ID
+	        rowSet.updateString("date", w.getDate());
+	        rowSet.updateString("workoutType", w.getWorkoutType());
+	        // ***** FINISH OTHERS *****
+	        rowSet.updateRow();
+	        rowSet.moveToCurrentRow();
+        } catch (SQLException ex) {
+            try {
+              rowSet.rollback();
+           } catch (SQLException e) {
+
+           }
+           ex.printStackTrace();
+        }
+        return w;
+     }
+    
+    public void delete() {
+        try {
+           rowSet.moveToCurrentRow();
+           rowSet.deleteRow();
+        } catch (SQLException ex) {
+           try {
+              rowSet.rollback();
+           } catch (SQLException e) { }
+           ex.printStackTrace();
+        }
+
+     }
+    
+    public Workout getCurrent() {
+        Workout w = new Workout();
+        try {
+            rowSet.moveToCurrentRow();
+            w.setWorkoutId(rowSet.getInt("workoutId"));
+            w.setDate(rowSet.getString("date"));
+            w.setWorkoutType(rowSet.getString("workoutType"));
+
+           // ***** FINISH OTHERS *****
+        } catch (SQLException ex) {
+           ex.printStackTrace();
+        }
+        return w;
+     }
+    
+    public Workout moveFirst() {
+        Workout w = new Workout();
+        try {
+           rowSet.first();
+           w.setWorkoutId(rowSet.getInt("workoutId"));
+           w.setDate(rowSet.getString("date"));
+           w.setWorkoutType(rowSet.getString("workoutType"));
+           // ***** FINISH OTHERS *****
+
+        } catch (SQLException ex) {
+           ex.printStackTrace();
+        }
+        return w;
+     }
+
+     public Workout moveLast() {
+        Workout w = new Workout();
+        try {
+           rowSet.last();
+           w.setWorkoutId(rowSet.getInt("workoutId"));
+           w.setDate(rowSet.getString("date"));
+           w.setWorkoutType(rowSet.getString("workoutType"));
+           // ***** FINISH OTHERS *****
+        } catch (SQLException ex) {
+           ex.printStackTrace();
+        }
+        return w;
+     }
+
+     public Workout moveNext() {
+        Workout w = new Workout();
+        try {
+           if (rowSet.next() == false)
+              rowSet.previous();
+           w.setWorkoutId(rowSet.getInt("workoutId"));
+           w.setDate(rowSet.getString("date"));
+           w.setWorkoutType(rowSet.getString("workoutType"));
+           // ***** FINISH OTHERS *****
+        } catch (SQLException ex) {
+           ex.printStackTrace();
+        }
+        return w;
+     }
+
+     public Workout movePrevious() {
+        Workout w = new Workout();
+        try {
+           if (rowSet.previous() == false)
+              rowSet.next();
+           w.setWorkoutId(rowSet.getInt("workoutId"));
+           w.setDate(rowSet.getString("date"));
+           w.setWorkoutType(rowSet.getString("workoutType"));
+           // ***** FINISH OTHERS *****
+        } catch (SQLException ex) {
+           ex.printStackTrace();
+        }
+        return w;
+     }
 }

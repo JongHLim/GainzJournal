@@ -39,7 +39,7 @@ public class WorkoutTesting {
             System.out.println(setsAndReps.get(index));
         }
         
-        workout1.addExercise(exercise1);
+//        workout1.addExercise(exercise1);
     }
     
 }

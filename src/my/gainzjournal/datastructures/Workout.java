@@ -21,15 +21,14 @@ public class Workout {
     // e.g. Chest, Back, Chest/Back
     private String workoutType;
     
-    private ArrayList<Exercise> exercises;
+    //private ArrayList<Exercise> exercises;
     
     private int workoutId;
     
     // constructor for Workout data structure
     // parameter is the workout type
     public Workout() {
-        // date of workout
-        this.exercises = new ArrayList<>();
+        //this.exercises = new ArrayList<>();
     }
     
     public void setDate(String date) {
@@ -37,6 +36,7 @@ public class Workout {
     }
     
         // return the date of current workout
+    // ***** CHANGED ***** from above
     public String getDate() {
     	// for date automation... decided not to use
 //        String strings[] = this.workoutDate.toString().split(" ");
@@ -60,10 +60,10 @@ public class Workout {
         return this.workoutType;
     }
     
-    public Workout addExercise(Exercise currentExercise) {
-        // with given exercise name, create and add exercise to ArrayList
-        this.exercises.add(currentExercise);
-        return this;
-    }
+//    public Workout addExercise(Exercise currentExercise) {
+//        // with given exercise name, create and add exercise to ArrayList
+//        this.exercises.add(currentExercise);
+//        return this;
+//    }
     
 }

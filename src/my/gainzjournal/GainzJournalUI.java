@@ -40,12 +40,22 @@ public class GainzJournalUI extends javax.swing.JFrame {
         // make ID not editable
         workoutIdField.setEnabled(false);
         
-        newButton.addActionListener(new ButtonHandler()); 
+        // action depending on what button the user presses
+        newButton.addActionListener(new ButtonHandler());
+        updateButton.addActionListener(new ButtonHandler()); 
+        deleteButton.addActionListener(new ButtonHandler()); 
+        firstButton.addActionListener(new ButtonHandler()); 
+        previousButton.addActionListener(new ButtonHandler()); 
+        nextButton.addActionListener(new ButtonHandler()); 
+        lastButton.addActionListener(new ButtonHandler()); 
     }
 
     private Workout getFieldData() {
         Workout w = new Workout();
-        w.setWorkoutId(Integer.parseInt(workoutIdField.getText()));
+        // if the ID Field is not empty... retrieve
+        if (!workoutIdField.getText().equals(""))
+            w.setWorkoutId(Integer.parseInt(workoutIdField.getText()));
+
         w.setDate(workoutDateField.getText());
         w.setWorkoutType(workoutTypeField.getText());
         // ***** do the rest *****
@@ -61,13 +71,98 @@ public class GainzJournalUI extends javax.swing.JFrame {
        
     private boolean isEmptyFieldData() {
         return (workoutDateField.getText().trim().isEmpty()
-            && workoutIdField.getText().trim().isEmpty()
             && workoutTypeField.getText().trim().isEmpty()
             && exerciseField.getText().trim().isEmpty()
             && weightField.getText().trim().isEmpty()
             && setsField.getText().trim().isEmpty()
             && repsField.getText().trim().isEmpty());
    }
+    
+    private Workout initiateWorkout() {
+    	Workout w;
+    	if (workoutIdField.getText().equals(""))
+        	w = new Workout();
+    	else
+    		w = getFieldData();
+    	return w;
+    }
+    
+    private class ButtonHandler implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        	
+        	Workout w = getFieldData();
+            switch (e.getActionCommand()) {
+            	// user clicked "Save"
+                case "Save":
+                    // fields are empty
+                    if (isEmptyFieldData()) {
+                        JOptionPane.showMessageDialog(null, 
+                        		"Cannot create an empty workout entry.");
+                        return;
+                    }
+                    if (bean.create(w) != null) {
+                        JOptionPane.showMessageDialog(null, 
+                        		"New workout entry was created successfully.");
+                        newButton.setText("New");
+                    }
+                    break;
+                // user clicked "New"
+                case "New":
+                    w.setWorkoutId(new Random().nextInt(Integer.MAX_VALUE) + 1);
+                    w.setDate("");
+                    w.setWorkoutType("");
+                    // **** FINISH OTHERS *****
+                    setFieldData(w);
+                    newButton.setText("Save");
+                    break;
+                    
+                    
+                // user clicked "Update"
+                    // ***** COME BACK AND FIX BUGS *****
+//                case "Update":
+//                    if (isEmptyFieldData()) {
+//                       JOptionPane.showMessageDialog(null, 
+//                    		   "Cannot update an empty workout record");
+//                       return;
+//                    }
+//                    if (bean.update(w) != null)
+//                       JOptionPane.showMessageDialog(null,"Workout entry with ID:" + 
+//                       String.valueOf(w.getWorkoutId()
+//                       + " is updated successfully"));
+//                    break;
+                // user clicked "Delete"
+                case "Delete":
+                    if (isEmptyFieldData()) {
+                       JOptionPane.showMessageDialog(null,
+                       "Cannot delete an empty workout record");
+                       return;
+                    }
+                    w = bean.getCurrent();
+                    bean.delete();
+                    JOptionPane.showMessageDialog(
+                       null,"Workout with ID:"
+                       + String.valueOf(w.getWorkoutId()
+                       + " is deleted successfully"));
+                       break;
+                // user clicked "First"
+		        case "First":
+		            setFieldData(bean.moveFirst()); break;
+		        // user clicked "Previous"
+		        case "Previous":
+		            setFieldData(bean.movePrevious()); break;
+		        // user clicked "Next"
+		        case "Next":
+		            setFieldData(bean.moveNext()); break;
+		        // user clicked "Last"
+		        case "Last":
+		            setFieldData(bean.moveLast()); break;
+                default:
+                    JOptionPane.showMessageDialog(null,
+                    "invalid command");
+            }
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -266,43 +361,7 @@ public class GainzJournalUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private class ButtonHandler implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-        	
-        	Workout w;
-        	if (workoutIdField.getText().equals(""))
-            	w = new Workout();
-        	else
-        		w = getFieldData();
-        	
-            switch (e.getActionCommand()) {
-                case "Save":
-                    // fields are empty
-                    if (isEmptyFieldData()) {
-                        JOptionPane.showMessageDialog(null, "Cannot create an empty workout entry.");
-                        return;
-                    }
-                    if (bean.create(w) != null) {
-                        JOptionPane.showMessageDialog(null, "New person created successfully.");
-                        newButton.setText("New");
-                        break;
-                    }
-                // new workout entry
-                case "New":
-                    w.setWorkoutId(new Random().nextInt(Integer.MAX_VALUE) + 1);
-                    w.setDate("");
-                    w.setWorkoutType("");
-                    // **** FINISH OTHERS *****
-                    setFieldData(w);
-                    newButton.setText("Save");
-                    break;
-                default:
-                    JOptionPane.showMessageDialog(null,
-                    "invalid command");
-            }
-        }
-    }
+    
     
     /**
      * @param args the command line arguments
