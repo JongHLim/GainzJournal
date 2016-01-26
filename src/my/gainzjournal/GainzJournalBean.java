@@ -44,7 +44,7 @@ public class GainzJournalBean {
             rowSet.moveToInsertRow();
             rowSet.updateInt("workoutId", w.getWorkoutId());
             rowSet.updateString("date", w.getDate());
-            rowSet.updateString("workoutType", w.getWorkoutType());
+             rowSet.updateString("workoutType", w.getWorkoutType());
             // ***** FINISH OTHERS *****
             rowSet.insertRow();
             rowSet.moveToCurrentRow();

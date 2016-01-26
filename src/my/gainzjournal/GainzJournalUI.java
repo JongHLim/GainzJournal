@@ -117,20 +117,20 @@ public class GainzJournalUI extends javax.swing.JFrame {
                     newButton.setText("Save");
                     break;
                     
-                    
                 // user clicked "Update"
                     // ***** COME BACK AND FIX BUGS *****
-//                case "Update":
-//                    if (isEmptyFieldData()) {
-//                       JOptionPane.showMessageDialog(null, 
-//                    		   "Cannot update an empty workout record");
-//                       return;
-//                    }
-//                    if (bean.update(w) != null)
-//                       JOptionPane.showMessageDialog(null,"Workout entry with ID:" + 
-//                       String.valueOf(w.getWorkoutId()
-//                       + " is updated successfully"));
-//                    break;
+                case "Update":
+                    if (isEmptyFieldData()) {
+                       JOptionPane.showMessageDialog(null, 
+                    		   "Cannot update an empty workout record");
+                       return;
+                    }
+                    if (bean.update(w) != null)
+                       JOptionPane.showMessageDialog(null,"Workout entry with ID:" + 
+                       String.valueOf(w.getWorkoutId()
+                       + " is updated successfully"));
+                    break;
+                    
                 // user clicked "Delete"
                 case "Delete":
                     if (isEmptyFieldData()) {
@@ -174,6 +174,7 @@ public class GainzJournalUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        
         newButton = new javax.swing.JButton();
         updateButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
@@ -181,31 +182,36 @@ public class GainzJournalUI extends javax.swing.JFrame {
         previousButton = new javax.swing.JButton();
         nextButton = new javax.swing.JButton();
         lastButton = new javax.swing.JButton();
+        
+        workoutIdField = new javax.swing.JTextField();
+        workoutDateField = new javax.swing.JTextField();
+        workoutTypeField = new javax.swing.JTextField();
+        exerciseField = new javax.swing.JTextField();
+        weightField = new javax.swing.JTextField();
+        setsField = new javax.swing.JTextField();
+        repsField = new javax.swing.JTextField();
+        
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        workoutDateField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        workoutTypeField = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
-        weightField = new javax.swing.JTextField();
-        exerciseField = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        setsField = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        repsField = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
-        workoutIdField = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
         newButton.setText("New");
+
         jPanel1.add(newButton, new java.awt.GridBagConstraints());
 
         updateButton.setText("Update");
@@ -239,10 +245,6 @@ public class GainzJournalUI extends javax.swing.JFrame {
         jLabel5.setText("Sets");
 
         jLabel6.setText("Reps");
-        
-        jButton2.setText("Add exercise");
-
-        jLabel7.setText("Workout ID");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -290,6 +292,12 @@ public class GainzJournalUI extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jButton2.setText("Add exercise");
+
+        jLabel7.setText("Workout ID");
+
+        jLabel8.setText("Click the \"New\" button to submit a new workout entry!");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -312,13 +320,16 @@ public class GainzJournalUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(workoutIdField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
+                    .addComponent(jButton2)
+                    .addComponent(jLabel8))
                 .addContainerGap(69, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jLabel8)
+                .addGap(5, 5, 5)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(workoutDateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -332,7 +343,7 @@ public class GainzJournalUI extends javax.swing.JFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
-                .addContainerGap(108, Short.MAX_VALUE))
+                .addContainerGap(89, Short.MAX_VALUE))
         );
 
         jScrollPane1.setViewportView(jPanel2);
@@ -400,10 +411,16 @@ public class GainzJournalUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton deleteButton;
-    private javax.swing.JTextField exerciseField;
     private javax.swing.JButton firstButton;
+    private javax.swing.JButton lastButton;
+    private javax.swing.JButton newButton;
+    private javax.swing.JButton nextButton;
+    private javax.swing.JButton previousButton;
+    private javax.swing.JButton updateButton;
+    
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -411,17 +428,15 @@ public class GainzJournalUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton lastButton;
-    private javax.swing.JButton newButton;
-    private javax.swing.JButton nextButton;
-    private javax.swing.JButton previousButton;
+
+    private javax.swing.JTextField exerciseField;
     private javax.swing.JTextField repsField;
     private javax.swing.JTextField setsField;
-    private javax.swing.JButton updateButton;
     private javax.swing.JTextField weightField;
     private javax.swing.JTextField workoutDateField;
     private javax.swing.JTextField workoutIdField;
