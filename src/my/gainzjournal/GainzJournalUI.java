@@ -55,7 +55,6 @@ public class GainzJournalUI extends javax.swing.JFrame {
         // if the ID Field is not empty... retrieve
         if (!workoutIdField.getText().equals(""))
             w.setWorkoutId(Integer.parseInt(workoutIdField.getText()));
-
         w.setDate(workoutDateField.getText());
         w.setWorkoutType(workoutTypeField.getText());
         // ***** do the rest *****
@@ -77,15 +76,6 @@ public class GainzJournalUI extends javax.swing.JFrame {
             && setsField.getText().trim().isEmpty()
             && repsField.getText().trim().isEmpty());
    }
-    
-    private Workout initiateWorkout() {
-    	Workout w;
-    	if (workoutIdField.getText().equals(""))
-        	w = new Workout();
-    	else
-    		w = getFieldData();
-    	return w;
-    }
     
     private class ButtonHandler implements ActionListener {
         @Override
@@ -118,7 +108,8 @@ public class GainzJournalUI extends javax.swing.JFrame {
                     break;
                     
                 // user clicked "Update"
-                    // ***** COME BACK AND FIX BUGS *****
+                // ***** When a user creates a new workout entry then tries to update
+                // it, there is an error. *****
                 case "Update":
                     if (isEmptyFieldData()) {
                        JOptionPane.showMessageDialog(null, 
@@ -133,6 +124,12 @@ public class GainzJournalUI extends javax.swing.JFrame {
                     
                 // user clicked "Delete"
                 case "Delete":
+                	// CASE TO PREVENT THE USER FROM DELETING THE SAMPLE
+                	if (w.getWorkoutId() == 1) {
+                		JOptionPane.showMessageDialog(null,
+                                "You cannot delete the sample workout entry.");
+                        return;
+                	}
                     if (isEmptyFieldData()) {
                        JOptionPane.showMessageDialog(null,
                        "Cannot delete an empty workout record");

@@ -18,6 +18,7 @@ public class Exercise {
 	private int exerciseId;
     private int workoutId;
     private String exerciseName;
+    private String weightSetsReps;
 
     public Exercise() {
 
@@ -46,60 +47,71 @@ public class Exercise {
     public String getExerciseName() {
         return this.exerciseName;
     }
-        
-    // data structure to represent the weight, sets and reps for an exercise
-    public class WeightSetsByReps {
-
-    	private int setsId;
-    	private int exerciseId;
-        private int weight;
-        private int sets;
-        private int reps;
-
-        public WeightSetsByReps() {
-
-        }
-
-        public void setSetsId(int sid) {
-        	setsId = sid;
-        }
-        
-        public int getSetsId() {
-        	return this.setsId;
-        }
-        
-        public void setExerciseId(int eid) {
-        	exerciseId = eid;
-        }
-        
-        public int getExerciseId() {
-        	return this.exerciseId;
-        }
-        
-        public void setWeight(int weightNumber) {
-        	weight = weightNumber;
-        }
-        
-        public int getWeight() {
-        	return this.weight;
-        }
-        
-        public void setSets(int setNumber) {
-        	sets = setNumber;
-        }
-        
-        public int getSets() {
-        	return this.sets;
-        }
-        
-        public void setReps(int repNumber) {
-        	reps = repNumber;
-        }
-        
-        public int getReps() {
-        	return this.reps;
-        }
-        
+    
+    public void setWeightSetsReps(String value) {
+    	weightSetsReps = value;
     }
+    
+    public String getWeightSetsReps() {
+    	return this.weightSetsReps;
+    }
+        
+    /*
+     * The WeightSetsByReps data structure is no longer needed due to design changes.
+     */
+//    // data structure to represent the weight, sets and reps for an exercise
+//    public class WeightSetsByReps {
+//
+//    	private int setsId;
+//    	private int exerciseId;
+//        private int weight;
+//        private int sets;
+//        private int reps;
+//
+//        public WeightSetsByReps() {
+//
+//        }
+//
+//        public void setSetsId(int sid) {
+//        	setsId = sid;
+//        }
+//        
+//        public int getSetsId() {
+//        	return this.setsId;
+//        }
+//        
+//        public void setExerciseId(int eid) {
+//        	exerciseId = eid;
+//        }
+//        
+//        public int getExerciseId() {
+//        	return this.exerciseId;
+//        }
+//        
+//        public void setWeight(int weightNumber) {
+//        	weight = weightNumber;
+//        }
+//        
+//        public int getWeight() {
+//        	return this.weight;
+//        }
+//        
+//        public void setSets(int setNumber) {
+//        	sets = setNumber;
+//        }
+//        
+//        public int getSets() {
+//        	return this.sets;
+//        }
+//        
+//        public void setReps(int repNumber) {
+//        	reps = repNumber;
+//        }
+//        
+//        public int getReps() {
+//        	return this.reps;
+//        }
+//        
+//    }
         
 }

@@ -21,25 +21,25 @@ public class WorkoutTesting {
     }
     
     public static void WorkoutTest1() {
-        Workout workout1 = new Workout();
-        workout1.setWorkoutType("Chest");
-        System.out.println(workout1.getDate());
-        System.out.println("Workout type is " + workout1.getWorkoutType() + ".");
-        
-        Exercise exercise1 = new Exercise("Bench Press");
-        System.out.println("Exercise name is " + exercise1.getExerciseName() + ".");
-        exercise1.addSetsReps(135, 1, 10);
-        exercise1.addSetsReps(185, 1, 8);
-        exercise1.addSetsReps(225, 1, 6);
-        exercise1.addSetsReps(255, 1, 5);
-        exercise1.addSetsReps(275, 1, 5);
-        exercise1.addSetsReps(245, 4, 5);
-        ArrayList<String> setsAndReps = exercise1.getSetsReps();
-        for (int index = 0; index < setsAndReps.size(); index++) {
-            System.out.println(setsAndReps.get(index));
-        }
-        
-//        workout1.addExercise(exercise1);
+//        Workout workout1 = new Workout();
+//        workout1.setWorkoutType("Chest");
+//        System.out.println(workout1.getDate());
+//        System.out.println("Workout type is " + workout1.getWorkoutType() + ".");
+//        
+//        Exercise exercise1 = new Exercise("Bench Press");
+//        System.out.println("Exercise name is " + exercise1.getExerciseName() + ".");
+//        exercise1.addSetsReps(135, 1, 10);
+//        exercise1.addSetsReps(185, 1, 8);
+//        exercise1.addSetsReps(225, 1, 6);
+//        exercise1.addSetsReps(255, 1, 5);
+//        exercise1.addSetsReps(275, 1, 5);
+//        exercise1.addSetsReps(245, 4, 5);
+//        ArrayList<String> setsAndReps = exercise1.getSetsReps();
+//        for (int index = 0; index < setsAndReps.size(); index++) {
+//            System.out.println(setsAndReps.get(index));
+//        }
+//        
+////        workout1.addExercise(exercise1);
     }
     
 }

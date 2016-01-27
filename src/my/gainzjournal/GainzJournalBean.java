@@ -11,8 +11,15 @@ package my.gainzjournal;
  */
 
 import java.sql.*;
+
+import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.JdbcRowSet;
+import javax.sql.rowset.JoinRowSet;
+
+import com.sun.rowset.CachedRowSetImpl;
 import com.sun.rowset.JdbcRowSetImpl;
+import com.sun.rowset.JoinRowSetImpl;
+
 import my.gainzjournal.datastructures.*;
 
 public class GainzJournalBean {
@@ -20,45 +27,75 @@ public class GainzJournalBean {
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost:3306/Workouts";
     static final String DB_USER = "jhlim84";
-    static final String DB_PASS = "9S3y8n4!";
-    private JdbcRowSet rowSet = null;
+    static final String DB_PASS = "jonghoonlim";
+    private JdbcRowSet workoutRowSet = null;
+    private JdbcRowSet exerciseRowSet = null;
+    private JoinRowSet joinRowSet = null;
     
     public GainzJournalBean() {
         try {
             Class.forName(JDBC_DRIVER);
-            rowSet = new JdbcRowSetImpl();
-            rowSet.setUrl(DB_URL);
-            rowSet.setUsername(DB_USER);
-            rowSet.setPassword(DB_PASS);
-            rowSet.setCommand("SELECT * FROM Workout");
-            rowSet.execute();
+            workoutRowSet = new JdbcRowSetImpl();
+            workoutRowSet.setUrl(DB_URL);
+            workoutRowSet.setUsername(DB_USER);
+            workoutRowSet.setPassword(DB_PASS);
+            workoutRowSet.setCommand("SELECT * FROM Workout");
+            workoutRowSet.execute();
         }
         catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
+        }
+        
+        try {
+            Class.forName(JDBC_DRIVER);
+            exerciseRowSet = new JdbcRowSetImpl();
+            exerciseRowSet.setUrl(DB_URL);
+            exerciseRowSet.setUsername(DB_USER);
+            exerciseRowSet.setPassword(DB_PASS);
+            exerciseRowSet.setCommand("SELECT * FROM Exercise");
+            exerciseRowSet.execute();
+        }
+        catch (SQLException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        
+        try {
+        	Class.forName(JDBC_DRIVER);
+        	JoinRowSet joinRowSet = new JoinRowSetImpl();
+        	joinRowSet.setUrl(DB_URL);
+        	joinRowSet.setUsername(DB_USER);
+        	joinRowSet.setPassword(DB_PASS);
+        	
+        	CachedRowSet workoutCached = new CachedRowSetImpl();
+        	workoutCached.populate(workoutRowSet);
+        	workoutCached.setMatchColumn(1);
+            joinRowSet.addRowSet(workoutCached);
+            
+            CachedRowSet exerciseCached = new CachedRowSetImpl();
+            exerciseCached.populate(exerciseRowSet);
+            exerciseCached.setMatchColumn(2);
+            joinRowSet.addRowSet(exerciseCached);
+            
+        } catch (SQLException | ClassNotFoundException ex) {
+        	ex.printStackTrace();
         }
     }
     
     // when the user clicks "Save"
     public Workout create(Workout w) {
         try {
-            rowSet.setCommand("SELECT * FROM Workout");
-            rowSet.execute();
-            rowSet.moveToInsertRow();
-            rowSet.updateInt("workoutId", w.getWorkoutId());
-            rowSet.updateString("date", w.getDate());
-            rowSet.updateString("workoutType", w.getWorkoutType());
+            workoutRowSet.moveToInsertRow();
+            workoutRowSet.updateInt("workoutId", w.getWorkoutId());
+            workoutRowSet.updateString("date", w.getDate());
+            workoutRowSet.updateString("workoutType", w.getWorkoutType());
+            // ***** ADD OTHERS *****
             
-            // Exercise ID, Workout ID, exercise
-            rowSet.setCommand("SELECT * FROM Exercise");
-            rowSet.execute();
-            rowSet.updateInt("workoutId", w.getWorkoutId());
-            
-            rowSet.insertRow();
-            rowSet.moveToCurrentRow();
+            workoutRowSet.insertRow();
+            workoutRowSet.moveToCurrentRow();
         } catch (SQLException ex) {
             try {
-	            rowSet.rollback();
-	            w = null;
+                workoutRowSet.rollback();
+                w = null;
             } catch (SQLException e) {
 
             }
@@ -69,18 +106,16 @@ public class GainzJournalBean {
     
     // when the user clicks "Update"
     public Workout update(Workout w) {
-	    try {
-	    	// no need to update the ID
-            rowSet.setCommand("SELECT * FROM Workout");
-            rowSet.execute();
-	        rowSet.updateString("date", w.getDate());
-	        rowSet.updateString("workoutType", w.getWorkoutType());
-	        // ***** FINISH OTHERS *****
-	        rowSet.updateRow();
-	        rowSet.moveToCurrentRow();
+        try {
+            // no need to update the ID
+            workoutRowSet.updateString("date", w.getDate());
+            workoutRowSet.updateString("workoutType", w.getWorkoutType());
+            // ***** FINISH OTHERS *****
+            workoutRowSet.updateRow();
+            workoutRowSet.moveToCurrentRow();
         } catch (SQLException ex) {
             try {
-              rowSet.rollback();
+                workoutRowSet.rollback();
            } catch (SQLException e) {
 
            }
@@ -91,13 +126,11 @@ public class GainzJournalBean {
     
     public void delete() {
         try {
-            rowSet.setCommand("SELECT * FROM Workout");
-            rowSet.execute();
-           rowSet.moveToCurrentRow();
-           rowSet.deleteRow();
+            workoutRowSet.moveToCurrentRow();
+            workoutRowSet.deleteRow();
         } catch (SQLException ex) {
            try {
-              rowSet.rollback();
+               workoutRowSet.rollback();
            } catch (SQLException e) { }
            ex.printStackTrace();
         }
@@ -107,12 +140,10 @@ public class GainzJournalBean {
     public Workout getCurrent() {
         Workout w = new Workout();
         try {
-            rowSet.setCommand("SELECT * FROM Workout");
-            rowSet.execute();
-            rowSet.moveToCurrentRow();
-            w.setWorkoutId(rowSet.getInt("workoutId"));
-            w.setDate(rowSet.getString("date"));
-            w.setWorkoutType(rowSet.getString("workoutType"));
+            workoutRowSet.moveToCurrentRow();
+            w.setWorkoutId(workoutRowSet.getInt("workoutId"));
+            w.setDate(workoutRowSet.getString("date"));
+            w.setWorkoutType(workoutRowSet.getString("workoutType"));
 
            // ***** FINISH OTHERS *****
         } catch (SQLException ex) {
@@ -124,12 +155,10 @@ public class GainzJournalBean {
     public Workout moveFirst() {
         Workout w = new Workout();
         try {
-            rowSet.setCommand("SELECT * FROM Workout");
-            rowSet.execute();
-           rowSet.first();
-           w.setWorkoutId(rowSet.getInt("workoutId"));
-           w.setDate(rowSet.getString("date"));
-           w.setWorkoutType(rowSet.getString("workoutType"));
+            workoutRowSet.first();
+           w.setWorkoutId(workoutRowSet.getInt("workoutId"));
+           w.setDate(workoutRowSet.getString("date"));
+           w.setWorkoutType(workoutRowSet.getString("workoutType"));
            // ***** FINISH OTHERS *****
 
         } catch (SQLException ex) {
@@ -141,12 +170,10 @@ public class GainzJournalBean {
      public Workout moveLast() {
         Workout w = new Workout();
         try {
-            rowSet.setCommand("SELECT * FROM Workout");
-            rowSet.execute();
-           rowSet.last();
-           w.setWorkoutId(rowSet.getInt("workoutId"));
-           w.setDate(rowSet.getString("date"));
-           w.setWorkoutType(rowSet.getString("workoutType"));
+            workoutRowSet.last();
+           w.setWorkoutId(workoutRowSet.getInt("workoutId"));
+           w.setDate(workoutRowSet.getString("date"));
+           w.setWorkoutType(workoutRowSet.getString("workoutType"));
            // ***** FINISH OTHERS *****
         } catch (SQLException ex) {
            ex.printStackTrace();
@@ -157,13 +184,11 @@ public class GainzJournalBean {
      public Workout moveNext() {
         Workout w = new Workout();
         try {
-            rowSet.setCommand("SELECT * FROM Workout");
-            rowSet.execute();
-           if (rowSet.next() == false)
-              rowSet.previous();
-           w.setWorkoutId(rowSet.getInt("workoutId"));
-           w.setDate(rowSet.getString("date"));
-           w.setWorkoutType(rowSet.getString("workoutType"));
+           if (workoutRowSet.next() == false)
+               workoutRowSet.previous();
+           w.setWorkoutId(workoutRowSet.getInt("workoutId"));
+           w.setDate(workoutRowSet.getString("date"));
+           w.setWorkoutType(workoutRowSet.getString("workoutType"));
            // ***** FINISH OTHERS *****
         } catch (SQLException ex) {
            ex.printStackTrace();
@@ -174,13 +199,11 @@ public class GainzJournalBean {
      public Workout movePrevious() {
         Workout w = new Workout();
         try {
-            rowSet.setCommand("SELECT * FROM Workout");
-            rowSet.execute();
-           if (rowSet.previous() == false)
-              rowSet.next();
-           w.setWorkoutId(rowSet.getInt("workoutId"));
-           w.setDate(rowSet.getString("date"));
-           w.setWorkoutType(rowSet.getString("workoutType"));
+           if (workoutRowSet.previous() == false)
+               workoutRowSet.next();
+           w.setWorkoutId(workoutRowSet.getInt("workoutId"));
+           w.setDate(workoutRowSet.getString("date"));
+           w.setWorkoutType(workoutRowSet.getString("workoutType"));
            // ***** FINISH OTHERS *****
         } catch (SQLException ex) {
            ex.printStackTrace();
