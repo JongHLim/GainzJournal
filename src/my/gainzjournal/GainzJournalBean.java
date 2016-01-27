@@ -59,26 +59,26 @@ public class GainzJournalBean {
             ex.printStackTrace();
         }
         
-        try {
-        	Class.forName(JDBC_DRIVER);
-        	JoinRowSet joinRowSet = new JoinRowSetImpl();
-        	joinRowSet.setUrl(DB_URL);
-        	joinRowSet.setUsername(DB_USER);
-        	joinRowSet.setPassword(DB_PASS);
-        	
-        	CachedRowSet workoutCached = new CachedRowSetImpl();
-        	workoutCached.populate(workoutRowSet);
-        	workoutCached.setMatchColumn(1);
-            joinRowSet.addRowSet(workoutCached);
-            
-            CachedRowSet exerciseCached = new CachedRowSetImpl();
-            exerciseCached.populate(exerciseRowSet);
-            exerciseCached.setMatchColumn(2);
-            joinRowSet.addRowSet(exerciseCached);
-            
-        } catch (SQLException | ClassNotFoundException ex) {
-        	ex.printStackTrace();
-        }
+//        try {
+//        	Class.forName(JDBC_DRIVER);
+//        	JoinRowSet joinRowSet = new JoinRowSetImpl();
+//        	joinRowSet.setUrl(DB_URL);
+//        	joinRowSet.setUsername(DB_USER);
+//        	joinRowSet.setPassword(DB_PASS);
+//        	
+//        	CachedRowSet workoutCached = new CachedRowSetImpl();
+//        	workoutCached.populate(workoutRowSet);
+//        	workoutCached.setMatchColumn(1);
+//            joinRowSet.addRowSet(workoutCached);
+//            
+//            CachedRowSet exerciseCached = new CachedRowSetImpl();
+//            exerciseCached.populate(exerciseRowSet);
+//            exerciseCached.setMatchColumn(2);
+//            joinRowSet.addRowSet(exerciseCached);
+//            
+//        } catch (SQLException | ClassNotFoundException ex) {
+//        	ex.printStackTrace();
+//        }
     }
     
     // when the user clicks "Save"
@@ -88,10 +88,11 @@ public class GainzJournalBean {
             workoutRowSet.updateInt("workoutId", w.getWorkoutId());
             workoutRowSet.updateString("date", w.getDate());
             workoutRowSet.updateString("workoutType", w.getWorkoutType());
-            // ***** ADD OTHERS *****
             
+            // take care of exercise in createExercise()
             workoutRowSet.insertRow();
             workoutRowSet.moveToCurrentRow();
+            
         } catch (SQLException ex) {
             try {
                 workoutRowSet.rollback();
@@ -103,6 +104,31 @@ public class GainzJournalBean {
       }
       return w;
    }
+    
+    // when the user clicks "Save"... take care of the exercise fields
+    public Exercise createExercise(Exercise ex, Workout w) {
+    	try {
+            exerciseRowSet.moveToInsertRow();
+            exerciseRowSet.updateInt("exerciseId", ex.getExerciseId());
+            exerciseRowSet.updateInt("workoutId", w.getWorkoutId());
+            exerciseRowSet.updateString("exercise", ex.getExerciseName());
+            exerciseRowSet.updateString("weightSetsReps", ex.getWeightSetsReps());
+            
+            // take care of exercise in createExercise()
+            exerciseRowSet.insertRow();
+            exerciseRowSet.moveToCurrentRow();
+            
+        } catch (SQLException exception) {
+            try {
+            	exerciseRowSet.rollback();
+                ex = null;
+            } catch (SQLException e) {
+
+            }
+         exception.printStackTrace();
+      }
+      return ex;
+    }
     
     // when the user clicks "Update"
     public Workout update(Workout w) {

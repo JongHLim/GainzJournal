@@ -48,6 +48,9 @@ public class GainzJournalUI extends javax.swing.JFrame {
         previousButton.addActionListener(new ButtonHandler()); 
         nextButton.addActionListener(new ButtonHandler()); 
         lastButton.addActionListener(new ButtonHandler()); 
+        
+        addMoreSetsButton.addActionListener(new ExerciseButtonHandler());
+        addExerciseButton.addActionListener(new ExerciseButtonHandler());
     }
 
     private Workout getFieldData() {
@@ -57,7 +60,7 @@ public class GainzJournalUI extends javax.swing.JFrame {
             w.setWorkoutId(Integer.parseInt(workoutIdField.getText()));
         w.setDate(workoutDateField.getText());
         w.setWorkoutType(workoutTypeField.getText());
-        // ***** do the rest *****
+        // rest of the fields are retrieved from exerciseGetFieldData()
         return w;
     }
     
@@ -77,12 +80,42 @@ public class GainzJournalUI extends javax.swing.JFrame {
             && repsField.getText().trim().isEmpty());
    }
     
+    private class ExerciseButtonHandler implements ActionListener {
+    	@Override
+    	public void actionPerformed(ActionEvent event) {
+    		
+    	}
+    }
+    
+    private Exercise exerciseGetFieldData() {
+    	Exercise ex = new Exercise();
+    	// assign a exercise ID everytime an Exercise Object is created
+    	int currentExerciseId = new Random().nextInt(Integer.MAX_VALUE) + 1;
+    	ex.setExerciseId(currentExerciseId);
+    	
+    	// set the exercise name...
+    	// allow users to set exercise even if weight sets reps fields are empty
+    	ex.setExerciseName(exerciseField.getText());
+    	
+		// save the weightSetsReps in the form: 315*1*1
+		String weight = weightField.getText();
+		String sets = setsField.getText();
+		String reps = repsField.getText();
+		String result = weight + "*" + sets + "*" + reps;
+		ex.setWeightSetsReps(result);
+    	
+    	return ex;
+    }
+    
     private class ButtonHandler implements ActionListener {
         @Override
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent event) {
         	
         	Workout w = getFieldData();
-            switch (e.getActionCommand()) {
+        	
+        	Exercise currentExercise = exerciseGetFieldData();
+        	
+            switch (event.getActionCommand()) {
             	// user clicked "Save"
                 case "Save":
                     // fields are empty
@@ -91,7 +124,8 @@ public class GainzJournalUI extends javax.swing.JFrame {
                         		"Cannot create an empty workout entry.");
                         return;
                     }
-                    if (bean.create(w) != null) {
+                    if (bean.create(w) != null && 
+                    		bean.createExercise(currentExercise, w) != null) {
                         JOptionPane.showMessageDialog(null, 
                         		"New workout entry was created successfully.");
                         newButton.setText("New");
@@ -102,7 +136,10 @@ public class GainzJournalUI extends javax.swing.JFrame {
                     w.setWorkoutId(new Random().nextInt(Integer.MAX_VALUE) + 1);
                     w.setDate("");
                     w.setWorkoutType("");
-                    // **** FINISH OTHERS *****
+                    
+                    // Exercise field begins here
+                    
+                    
                     setFieldData(w);
                     newButton.setText("Save");
                     break;
@@ -124,12 +161,6 @@ public class GainzJournalUI extends javax.swing.JFrame {
                     
                 // user clicked "Delete"
                 case "Delete":
-                	// CASE TO PREVENT THE USER FROM DELETING THE SAMPLE
-                	if (w.getWorkoutId() == 1) {
-                		JOptionPane.showMessageDialog(null,
-                                "You cannot delete the sample workout entry.");
-                        return;
-                	}
                     if (isEmptyFieldData()) {
                        JOptionPane.showMessageDialog(null,
                        "Cannot delete an empty workout record");
@@ -137,6 +168,7 @@ public class GainzJournalUI extends javax.swing.JFrame {
                     }
                     w = bean.getCurrent();
                     bean.delete();
+                    
                     JOptionPane.showMessageDialog(
                        null,"Workout with ID:"
                        + String.valueOf(w.getWorkoutId()
@@ -434,11 +466,12 @@ public class GainzJournalUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
 
     private javax.swing.JTextField exerciseField;
-    private javax.swing.JTextField repsField;
-    private javax.swing.JTextField setsField;
     private javax.swing.JTextField weightField;
-    private javax.swing.JTextField workoutDateField;
+    private javax.swing.JTextField setsField;
+    private javax.swing.JTextField repsField;
+    
     private javax.swing.JTextField workoutIdField;
+    private javax.swing.JTextField workoutDateField;
     private javax.swing.JTextField workoutTypeField;
     // End of variables declaration//GEN-END:variables
 }
