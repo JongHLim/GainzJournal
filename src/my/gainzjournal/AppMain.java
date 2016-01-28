@@ -28,7 +28,7 @@ public class AppMain {
         }
         
         // open the user interface
-        GainzJournalUI ui = new GainzJournalUI();
+        GainzJournalUserInterface ui = new GainzJournalUserInterface();
         ui.setVisible(true);
     }
 }
