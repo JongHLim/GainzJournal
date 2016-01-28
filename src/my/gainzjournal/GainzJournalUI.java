@@ -68,7 +68,13 @@ public class GainzJournalUI extends javax.swing.JFrame {
         workoutIdField.setText(String.valueOf(w.getWorkoutId()));
         workoutDateField.setText(w.getDate());
         workoutTypeField.setText(w.getWorkoutType());
-        // ***** do the rest *****
+    }
+    
+    private void exerciseSetFieldData(Exercise currentExercise) {
+    	exerciseField.setText(currentExercise.getExerciseName());
+    	weightField.setText("");
+    	setsField.setText("");
+    	repsField.setText("");
     }
        
     private boolean isEmptyFieldData() {
@@ -79,13 +85,6 @@ public class GainzJournalUI extends javax.swing.JFrame {
             && setsField.getText().trim().isEmpty()
             && repsField.getText().trim().isEmpty());
    }
-    
-    private class ExerciseButtonHandler implements ActionListener {
-    	@Override
-    	public void actionPerformed(ActionEvent event) {
-    		
-    	}
-    }
     
     private Exercise exerciseGetFieldData() {
     	Exercise ex = new Exercise();
@@ -107,6 +106,41 @@ public class GainzJournalUI extends javax.swing.JFrame {
     	return ex;
     }
     
+    private boolean isWSREmpty() {
+        return (weightField.getText().trim().isEmpty()
+            && setsField.getText().trim().isEmpty()
+            && repsField.getText().trim().isEmpty());
+   }
+    
+    private class ExerciseButtonHandler implements ActionListener {
+    	@Override
+    	public void actionPerformed(ActionEvent event) {
+    		
+    		Exercise currentExercise = exerciseGetFieldData();
+    		
+    		switch (event.getActionCommand()) {
+    		
+    		case "Add more sets and reps":
+    			if (isWSREmpty()) {
+                    JOptionPane.showMessageDialog(null, 
+                    		"Please input the amount of weight lifted,"
+                    		+ " number of sets, and number of reps for each set.");
+                    return;
+    			}
+    			if (bean.addMoreSetsAndReps(currentExercise) != null) {
+    				JOptionPane.showMessageDialog(null, 
+                    		"Additional weight, sets, and reps added "
+                    		+ "successfully.");
+    			}
+    			break;
+    		case "Add exercise":
+    			break;
+    			
+    		}
+    		
+    	}
+    }
+    
     private class ButtonHandler implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent event) {
@@ -115,6 +149,9 @@ public class GainzJournalUI extends javax.swing.JFrame {
         	
         	Exercise currentExercise = exerciseGetFieldData();
         	
+        	// for the case when the user clicks "New" then "First", "Previous",
+        	// "Next", and "Last"
+        	newButton.setText("New");
             switch (event.getActionCommand()) {
             	// user clicked "Save"
                 case "Save":
@@ -124,23 +161,28 @@ public class GainzJournalUI extends javax.swing.JFrame {
                         		"Cannot create an empty workout entry.");
                         return;
                     }
-                    if (bean.create(w) != null && 
-                    		bean.createExercise(currentExercise, w) != null) {
+                    if (bean.create(w) != null) {
+                    	bean.createExercise(currentExercise, w);
                         JOptionPane.showMessageDialog(null, 
                         		"New workout entry was created successfully.");
                         newButton.setText("New");
                     }
                     break;
                 // user clicked "New"
+                // **** BRING THE GUI BACK TO NORMAL WHEN "New"????? *****
                 case "New":
                     w.setWorkoutId(new Random().nextInt(Integer.MAX_VALUE) + 1);
                     w.setDate("");
                     w.setWorkoutType("");
                     
                     // Exercise field begins here
-                    
+                    currentExercise.setExerciseId(0);
+                    currentExercise.setWorkoutId(0);
+                    currentExercise.setExerciseName("");
+                    currentExercise.setWeightSetsReps("");
                     
                     setFieldData(w);
+                    exerciseSetFieldData(currentExercise);
                     newButton.setText("Save");
                     break;
                     

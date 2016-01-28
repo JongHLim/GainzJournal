@@ -58,27 +58,6 @@ public class GainzJournalBean {
         catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
-        
-//        try {
-//        	Class.forName(JDBC_DRIVER);
-//        	JoinRowSet joinRowSet = new JoinRowSetImpl();
-//        	joinRowSet.setUrl(DB_URL);
-//        	joinRowSet.setUsername(DB_USER);
-//        	joinRowSet.setPassword(DB_PASS);
-//        	
-//        	CachedRowSet workoutCached = new CachedRowSetImpl();
-//        	workoutCached.populate(workoutRowSet);
-//        	workoutCached.setMatchColumn(1);
-//            joinRowSet.addRowSet(workoutCached);
-//            
-//            CachedRowSet exerciseCached = new CachedRowSetImpl();
-//            exerciseCached.populate(exerciseRowSet);
-//            exerciseCached.setMatchColumn(2);
-//            joinRowSet.addRowSet(exerciseCached);
-//            
-//        } catch (SQLException | ClassNotFoundException ex) {
-//        	ex.printStackTrace();
-//        }
     }
     
     // when the user clicks "Save"
@@ -235,5 +214,25 @@ public class GainzJournalBean {
            ex.printStackTrace();
         }
         return w;
+     }
+     
+     public Exercise addMoreSetsAndReps(Exercise ex) {
+    	 try {
+    		 // update to the form 135*1*10/185*1*10
+    		 exerciseRowSet.next();
+    		 String newWsr = ex.getWeightSetsReps();
+    		 String oldWsr = exerciseRowSet.getString("weightSetsReps");
+    		 exerciseRowSet.updateString("weightSetsReps", oldWsr + "/" + newWsr);
+    		 exerciseRowSet.updateRow();
+    		 exerciseRowSet.moveToCurrentRow();
+    	 } catch (SQLException exception) {
+             try {
+            	 exerciseRowSet.rollback();
+            } catch (SQLException e) {
+
+            }
+            exception.printStackTrace();
+         }
+    	 return ex;
      }
 }
