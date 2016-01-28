@@ -176,12 +176,12 @@ public class GainzJournalBean {
         Workout w = new Workout();
         try {
             workoutRowSet.last();
-           w.setWorkoutId(workoutRowSet.getInt("workoutId"));
-           w.setDate(workoutRowSet.getString("date"));
-           w.setWorkoutType(workoutRowSet.getString("workoutType"));
+            w.setWorkoutId(workoutRowSet.getInt("workoutId"));
+            w.setDate(workoutRowSet.getString("date"));
+            w.setWorkoutType(workoutRowSet.getString("workoutType"));
            // ***** FINISH OTHERS *****
         } catch (SQLException ex) {
-           ex.printStackTrace();
+            ex.printStackTrace();
         }
         return w;
      }
@@ -234,5 +234,17 @@ public class GainzJournalBean {
             exception.printStackTrace();
          }
     	 return ex;
+     }
+     
+     public int getLastId() {
+    	 int id = 0;
+    	 try {
+    		 workoutRowSet.last();
+    		 id += workoutRowSet.getInt("workoutId");
+    		 return id;
+    	 } catch(SQLException e) {
+    		 e.printStackTrace();
+    	 }
+    	 return id;
      }
 }

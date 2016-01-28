@@ -45,10 +45,14 @@ public class GainzJournalUserInterface extends JFrame {
     
     private javax.swing.JButton addMoreSetsButton;
     private javax.swing.JButton addExerciseButton;
+    
+    private int workoutId;
 	
     private class ButtonHandler implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent event) {
+        	
+        	workoutId = 1;
         	
         	Workout w = getFieldData();
         	
@@ -76,7 +80,8 @@ public class GainzJournalUserInterface extends JFrame {
                 // user clicked "New"
                 // **** BRING THE GUI BACK TO NORMAL WHEN "New"????? *****
                 case "New":
-                    w.setWorkoutId(new Random().nextInt(Integer.MAX_VALUE) + 1);
+                	workoutId += bean.getLastId();
+                    w.setWorkoutId(workoutId);
                     w.setDate("");
                     w.setWorkoutType("");
                     
@@ -319,53 +324,53 @@ public class GainzJournalUserInterface extends JFrame {
 		panel_1.add(workoutIdField, "cell 1 0,growx");
 		workoutIdField.setColumns(10);
 		
-		JPanel panel_2 = new JPanel();
-		panel_1.add(panel_2, "cell 0 2 2 1,grow");
-		panel_2.setLayout(null);
+		JPanel exercisePanel = new JPanel();
+		panel_1.add(exercisePanel, "cell 0 2 2 1,grow");
+		exercisePanel.setLayout(null);
 		
 		JLabel lblExercise = new JLabel("Exercise");
 		lblExercise.setBounds(6, 6, 55, 16);
-		panel_2.add(lblExercise);
+		exercisePanel.add(lblExercise);
 		
 		exerciseField = new JTextField();
 		exerciseField.setBounds(61, 1, 122, 26);
-		panel_2.add(exerciseField);
+		exercisePanel.add(exerciseField);
 		exerciseField.setColumns(10);
 		
 		JLabel lblWeight = new JLabel("Weight");
 		lblWeight.setBounds(6, 34, 46, 16);
-		panel_2.add(lblWeight);
+		exercisePanel.add(lblWeight);
 		
 		weightField = new JTextField();
 		weightField.setBounds(47, 31, 40, 26);
-		panel_2.add(weightField);
+		exercisePanel.add(weightField);
 		weightField.setColumns(10);
 		
 		JLabel lblSets = new JLabel("Sets");
 		lblSets.setBounds(97, 34, 25, 16);
-		panel_2.add(lblSets);
+		exercisePanel.add(lblSets);
 		
 		setsField = new JTextField();
 		setsField.setBounds(124, 31, 30, 26);
-		panel_2.add(setsField);
+		exercisePanel.add(setsField);
 		setsField.setColumns(10);
 		
 		JLabel lblReps = new JLabel("Reps");
 		lblReps.setBounds(164, 34, 30, 16);
-		panel_2.add(lblReps);
+		exercisePanel.add(lblReps);
 		
 		repsField = new JTextField();
 		repsField.setBounds(197, 31, 30, 26);
-		panel_2.add(repsField);
+		exercisePanel.add(repsField);
 		repsField.setColumns(10);
 		
 		addExerciseButton = new JButton("Add Exercise");
 		addExerciseButton.setBounds(193, 0, 99, 28);
-		panel_2.add(addExerciseButton);
+		exercisePanel.add(addExerciseButton);
 		
 		addMoreSetsButton = new JButton("Add weight, sets, reps");
 		addMoreSetsButton.setBounds(240, 28, 149, 28);
-		panel_2.add(addMoreSetsButton);
+		exercisePanel.add(addMoreSetsButton);
 	}
 
 	/**
