@@ -25,7 +25,7 @@ public class Exercise {
     }
     
     public void setExerciseId(int eid) {
-    	exerciseId = eid;
+    	this.exerciseId = eid;
     }
     
     public int getExerciseId() {
@@ -33,7 +33,7 @@ public class Exercise {
     }
     
     public void setWorkoutId(int id) {
-    	workoutId = id;
+    	this.workoutId = id;
     }
     
     public int getWorkoutId() {
@@ -41,7 +41,7 @@ public class Exercise {
     }
     
     public void setExerciseName(String name) {
-    	exerciseName = name;
+    	this.exerciseName = name;
     }
     
     public String getExerciseName() {
@@ -49,7 +49,7 @@ public class Exercise {
     }
     
     public void setWeightSetsReps(String value) {
-    	weightSetsReps = value;
+    	this.weightSetsReps = value;
     }
     
     public String getWeightSetsReps() {

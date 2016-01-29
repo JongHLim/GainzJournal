@@ -16,15 +16,39 @@ import javax.swing.JOptionPane;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Random;
+import java.util.Map;
+import java.util.TreeMap;
 
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+import javax.swing.JTable;
 
 public class GainzJournalUserInterface extends JFrame {
 
-    private GainzJournalBean bean = new GainzJournalBean();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private GainzJournalBean bean = new GainzJournalBean();
+	// fill the exercise TreeMap every time the app opens
+	private TreeMap<Integer, TreeMap<String, String>> exercisesTreeMap = bean.fillExerciseMap();
+	
+	// TEST *****
+	public void testTreeMap() {
+		for (Map.Entry<Integer, TreeMap<String, String>> entry : exercisesTreeMap.entrySet())
+		{
+			int workoutID = entry.getKey();
+			TreeMap<String, String> exercises = entry.getValue();
+			for (String exercise : exercises.keySet()) {
+				System.out.print("[ Workout ID: " + workoutID);
+				System.out.print(" ] [ exercise: " + exercise);
+				String weightRepsSets = exercises.get(exercise);
+				System.out.println(" ] [ WRS: " + weightRepsSets + " ]");
+			}
+		}
+	}
 	
 	private JPanel contentPane;
 	private JTextField workoutDateField;
@@ -47,16 +71,20 @@ public class GainzJournalUserInterface extends JFrame {
     private javax.swing.JButton addExerciseButton;
     
     private int workoutId;
+    private int exerciseId;
+    
+    private Exercise currentExercise = new Exercise();
 	
     private class ButtonHandler implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent event) {
         	
         	workoutId = 1;
+        	exerciseId = 1001;
         	
         	Workout w = getFieldData();
         	
-        	Exercise currentExercise = exerciseGetFieldData();
+        	currentExercise = exerciseGetFieldData(currentExercise);
         	
         	// for the case when the user clicks "New" then "First", "Previous",
         	// "Next", and "Last"
@@ -80,14 +108,16 @@ public class GainzJournalUserInterface extends JFrame {
                 // user clicked "New"
                 // **** BRING THE GUI BACK TO NORMAL WHEN "New"????? *****
                 case "New":
-                	workoutId += bean.getLastId();
+                	workoutId += bean.getLastWorkoutId();
                     w.setWorkoutId(workoutId);
                     w.setDate("");
                     w.setWorkoutType("");
                     
                     // Exercise field begins here
-                    currentExercise.setExerciseId(0);
-                    currentExercise.setWorkoutId(0);
+                    currentExercise = new Exercise();
+                    exerciseId += bean.getLastExerciseId();
+                    currentExercise.setExerciseId(exerciseId);
+                    currentExercise.setWorkoutId(workoutId);
                     currentExercise.setExerciseName("");
                     currentExercise.setWeightSetsReps("");
                     
@@ -175,11 +205,15 @@ public class GainzJournalUserInterface extends JFrame {
     	@Override
     	public void actionPerformed(ActionEvent event) {
     		
-    		Exercise currentExercise = exerciseGetFieldData();
+    		currentExercise = exerciseGetFieldData(currentExercise);
     		
     		switch (event.getActionCommand()) {
     		
     		case "Add weight, sets, reps":
+    			if (exerciseField.getText().equals("")) {
+    				JOptionPane.showMessageDialog(null, "Please input the name of the exercise.");
+    				return;
+    			}
     			if (isWSREmpty()) {
                     JOptionPane.showMessageDialog(null, 
                     		"Please input the amount of weight lifted,"
@@ -187,9 +221,8 @@ public class GainzJournalUserInterface extends JFrame {
                     return;
     			}
     			if (bean.addMoreSetsAndReps(currentExercise) != null) {
-    				JOptionPane.showMessageDialog(null, 
-                    		"Additional weight, sets, and reps added "
-                    		+ "successfully.");
+    				JOptionPane.showMessageDialog(null, "Additional weight, sets, "
+    						+ "and reps added successfully.");
     			}
     			break;
     		case "Add Exercise":
@@ -200,11 +233,7 @@ public class GainzJournalUserInterface extends JFrame {
     	}
     }
     
-    private Exercise exerciseGetFieldData() {
-    	Exercise ex = new Exercise();
-    	// assign a exercise ID every time an Exercise Object is created
-    	int currentExerciseId = new Random().nextInt(Integer.MAX_VALUE) + 1;
-    	ex.setExerciseId(currentExerciseId);
+    private Exercise exerciseGetFieldData(Exercise ex) {
     	
     	// set the exercise name...
     	// allow users to set exercise even if weight sets reps fields are empty
@@ -239,6 +268,8 @@ public class GainzJournalUserInterface extends JFrame {
 	public GainzJournalUserInterface() {
 		initComponents();
 		myInitComponents();
+		// TEST the TREE MAP *****
+		testTreeMap();
 	}
 	
 	public void myInitComponents() {
@@ -301,7 +332,7 @@ public class GainzJournalUserInterface extends JFrame {
 		
 		JPanel panel_1 = new JPanel();
 		scrollPane.setViewportView(panel_1);
-		panel_1.setLayout(new MigLayout("", "[][grow]", "[][][grow]"));
+		panel_1.setLayout(new MigLayout("", "[][grow]", "[][][grow][grow]"));
 		
 		JLabel lblWorkoutId = new JLabel("Workout Date");
 		panel_1.add(lblWorkoutId, "cell 0 0,alignx trailing");

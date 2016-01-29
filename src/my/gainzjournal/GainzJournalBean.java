@@ -11,14 +11,12 @@ package my.gainzjournal;
  */
 
 import java.sql.*;
+import java.util.TreeMap;
 
-import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.JdbcRowSet;
 import javax.sql.rowset.JoinRowSet;
 
-import com.sun.rowset.CachedRowSetImpl;
 import com.sun.rowset.JdbcRowSetImpl;
-import com.sun.rowset.JoinRowSetImpl;
 
 import my.gainzjournal.datastructures.*;
 
@@ -30,7 +28,6 @@ public class GainzJournalBean {
     static final String DB_PASS = "jonghoonlim";
     private JdbcRowSet workoutRowSet = null;
     private JdbcRowSet exerciseRowSet = null;
-    private JoinRowSet joinRowSet = null;
     
     public GainzJournalBean() {
         try {
@@ -161,10 +158,10 @@ public class GainzJournalBean {
         Workout w = new Workout();
         try {
             workoutRowSet.first();
-           w.setWorkoutId(workoutRowSet.getInt("workoutId"));
-           w.setDate(workoutRowSet.getString("date"));
-           w.setWorkoutType(workoutRowSet.getString("workoutType"));
-           // ***** FINISH OTHERS *****
+            w.setWorkoutId(workoutRowSet.getInt("workoutId"));
+            w.setDate(workoutRowSet.getString("date"));
+            w.setWorkoutType(workoutRowSet.getString("workoutType"));
+            // ***** FINISH OTHERS *****
 
         } catch (SQLException ex) {
            ex.printStackTrace();
@@ -236,15 +233,65 @@ public class GainzJournalBean {
     	 return ex;
      }
      
-     public int getLastId() {
+     public int getLastWorkoutId() {
     	 int id = 0;
     	 try {
-    		 workoutRowSet.last();
-    		 id += workoutRowSet.getInt("workoutId");
-    		 return id;
+    		 if (workoutRowSet.first()) {
+        		 workoutRowSet.last();
+        		 id += workoutRowSet.getInt("workoutId");
+        		 return id;
+    		 }
     	 } catch(SQLException e) {
     		 e.printStackTrace();
     	 }
     	 return id;
+     }
+     
+     public int getLastExerciseId() {
+    	 int id = 0;
+    	 try {
+    		 if (exerciseRowSet.first()) {
+        		 exerciseRowSet.last();
+        		 id += exerciseRowSet.getInt("exerciseId");
+        		 return id;
+    		 }
+    	 } catch(SQLException e) {
+    		 e.printStackTrace();
+    	 }
+    	 return id;
+     }
+     
+     // create a TreeMap of <Workout ID, <Exercise, WeightSetsReps>>
+     public TreeMap<Integer, TreeMap<String, String>> fillExerciseMap() {
+    	 TreeMap<Integer, TreeMap<String, String>> result = new TreeMap<>();
+    	 TreeMap<String, String> exercises;
+    	 try {
+    		 // RowSet is empty
+        	 if (!exerciseRowSet.isBeforeFirst())
+        		 // return empty TreeMap
+        		 return result;
+        	 exerciseRowSet.beforeFirst();
+        	 while (exerciseRowSet.next()) {
+        		 int workoutId = exerciseRowSet.getInt("workoutId");
+        		 String exercise = exerciseRowSet.getString("exercise");
+        		 String weightSetsReps = exerciseRowSet.getString("weightSetsReps");
+        		 // the TreeMap does not contain the current workout ID
+        		 if (!result.containsKey(workoutId)) {
+        			 exercises = new TreeMap<>();
+        			 // add the new exercise for this workout ID
+        			 exercises.put(exercise, weightSetsReps);
+        			 result.put(workoutId, exercises);
+        		 }
+        		 // the TreeMap contains the current workout ID, just update it by adding the new exercise
+        		 else {
+        			 exercises = result.get(workoutId);
+        			 exercises.put(exercise, weightSetsReps);
+        			 result.put(workoutId, exercises);
+        		 }
+        	 }
+    	 } catch (SQLException e) {
+    		 e.printStackTrace();
+    	 }
+    	 return result;
      }
 }
