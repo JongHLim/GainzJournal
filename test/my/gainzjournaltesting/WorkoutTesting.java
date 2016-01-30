@@ -14,11 +14,28 @@ package my.gainzjournaltesting;
 import my.gainzjournal.datastructures.Workout;
 import my.gainzjournal.datastructures.Exercise;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 public class WorkoutTesting {
     
     public static void main(String args[]) {
         WorkoutTest1();
     }
+    
+// // TEST *****
+// 	public void testTreeMap() {
+// 		for (Map.Entry<Integer, TreeMap<String, String>> entry : exercisesTreeMap.entrySet())
+// 		{
+// 			int workoutID = entry.getKey();
+// 			TreeMap<String, String> exercises = entry.getValue();
+// 			for (String exercise : exercises.keySet()) {
+// 				System.out.print("[ Workout ID: " + workoutID);
+// 				System.out.print(" ] [ exercise: " + exercise);
+// 				String weightRepsSets = exercises.get(exercise);
+// 				System.out.println(" ] [ WRS: " + weightRepsSets + " ]");
+// 			}
+// 		}
+// 	}
     
     public static void WorkoutTest1() {
 //        Workout workout1 = new Workout();

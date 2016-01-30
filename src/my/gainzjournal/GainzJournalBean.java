@@ -28,7 +28,8 @@ public class GainzJournalBean {
     static final String DB_PASS = "jonghoonlim";
     private JdbcRowSet workoutRowSet = null;
     private JdbcRowSet exerciseRowSet = null;
-    
+	private TreeMap<Integer, TreeMap<String, String>> exerciseTreeMap = new TreeMap<>();
+	 
     public GainzJournalBean() {
         try {
             Class.forName(JDBC_DRIVER);
@@ -220,6 +221,7 @@ public class GainzJournalBean {
     		 String newWsr = ex.getWeightSetsReps();
     		 String oldWsr = exerciseRowSet.getString("weightSetsReps");
     		 exerciseRowSet.updateString("weightSetsReps", oldWsr + "/" + newWsr);
+    		 ex.setWeightSetsReps(oldWsr + "/" + newWsr);
     		 exerciseRowSet.updateRow();
     		 exerciseRowSet.moveToCurrentRow();
     	 } catch (SQLException exception) {
@@ -263,35 +265,66 @@ public class GainzJournalBean {
      
      // create a TreeMap of <Workout ID, <Exercise, WeightSetsReps>>
      public TreeMap<Integer, TreeMap<String, String>> fillExerciseMap() {
-    	 TreeMap<Integer, TreeMap<String, String>> result = new TreeMap<>();
     	 TreeMap<String, String> exercises;
     	 try {
     		 // RowSet is empty
         	 if (!exerciseRowSet.isBeforeFirst())
         		 // return empty TreeMap
-        		 return result;
+        		 return exerciseTreeMap;
         	 exerciseRowSet.beforeFirst();
         	 while (exerciseRowSet.next()) {
         		 int workoutId = exerciseRowSet.getInt("workoutId");
         		 String exercise = exerciseRowSet.getString("exercise");
         		 String weightSetsReps = exerciseRowSet.getString("weightSetsReps");
         		 // the TreeMap does not contain the current workout ID
-        		 if (!result.containsKey(workoutId)) {
+        		 if (!exerciseTreeMap.containsKey(workoutId)) {
         			 exercises = new TreeMap<>();
         			 // add the new exercise for this workout ID
         			 exercises.put(exercise, weightSetsReps);
-        			 result.put(workoutId, exercises);
+        			 exerciseTreeMap.put(workoutId, exercises);
         		 }
         		 // the TreeMap contains the current workout ID, just update it by adding the new exercise
         		 else {
-        			 exercises = result.get(workoutId);
+        			 exercises = exerciseTreeMap.get(workoutId);
         			 exercises.put(exercise, weightSetsReps);
-        			 result.put(workoutId, exercises);
+        			 exerciseTreeMap.put(workoutId, exercises);
         		 }
         	 }
     	 } catch (SQLException e) {
     		 e.printStackTrace();
     	 }
-    	 return result;
+    	 return exerciseTreeMap;
+     }
+     
+     // we need to update the map every time we add more (weight, sets, reps) and new exercises
+     public void updateExerciseMap(Exercise ex) {
+    	 int workoutId = ex.getWorkoutId();
+    	 String exerciseName = ex.getExerciseName();
+    	 String wsr = ex.getWeightSetsReps();
+    	 TreeMap<String, String> exercises;
+    	 if (exerciseTreeMap.containsKey(workoutId)) {
+    		 exercises = exerciseTreeMap.get(workoutId);
+
+    	 } else {
+    		 exercises = new TreeMap<>();
+
+    	 }
+		 exercises.put(exerciseName, wsr);
+		 exerciseTreeMap.put(workoutId, exercises);
+     }
+     
+     public TreeMap<String, String> getWorkoutExercises() {
+    	 TreeMap<String, String> currentExercises;
+    	 try {
+    		 
+    		 workoutRowSet.moveToCurrentRow();
+        	 int id = workoutRowSet.getInt("workoutId");
+        	 currentExercises = exerciseTreeMap.get(id);
+        	 return currentExercises;
+    	 } catch (SQLException e) {
+    		 
+    	 }
+    	 currentExercises = new TreeMap<>();
+    	 return currentExercises;
      }
 }

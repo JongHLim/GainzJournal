@@ -23,6 +23,9 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
+
+import java.awt.GridBagLayout;
 
 public class GainzJournalUserInterface extends JFrame {
 
@@ -34,21 +37,6 @@ public class GainzJournalUserInterface extends JFrame {
 	private GainzJournalBean bean = new GainzJournalBean();
 	// fill the exercise TreeMap every time the app opens
 	private TreeMap<Integer, TreeMap<String, String>> exercisesTreeMap = bean.fillExerciseMap();
-	
-	// TEST *****
-	public void testTreeMap() {
-		for (Map.Entry<Integer, TreeMap<String, String>> entry : exercisesTreeMap.entrySet())
-		{
-			int workoutID = entry.getKey();
-			TreeMap<String, String> exercises = entry.getValue();
-			for (String exercise : exercises.keySet()) {
-				System.out.print("[ Workout ID: " + workoutID);
-				System.out.print(" ] [ exercise: " + exercise);
-				String weightRepsSets = exercises.get(exercise);
-				System.out.println(" ] [ WRS: " + weightRepsSets + " ]");
-			}
-		}
-	}
 	
 	private JPanel contentPane;
 	private JTextField workoutDateField;
@@ -74,6 +62,7 @@ public class GainzJournalUserInterface extends JFrame {
     private int exerciseId;
     
     private Exercise currentExercise = new Exercise();
+    private JPanel exerciseListPanel;
 	
     private class ButtonHandler implements ActionListener {
         @Override
@@ -103,6 +92,11 @@ public class GainzJournalUserInterface extends JFrame {
                         JOptionPane.showMessageDialog(null, 
                         		"New workout entry was created successfully.");
                         newButton.setText("New");
+                        // update the TreeMap
+                        bean.updateExerciseMap(currentExercise);
+                        // ***** TEST TREE MAP *****
+                        
+                        listExercises();
                     }
                     break;
                 // user clicked "New"
@@ -122,7 +116,7 @@ public class GainzJournalUserInterface extends JFrame {
                     currentExercise.setWeightSetsReps("");
                     
                     setFieldData(w);
-                    exerciseSetFieldData(currentExercise);
+                    emptyExerciseFields();
                     newButton.setText("Save");
                     break;
                     
@@ -158,20 +152,45 @@ public class GainzJournalUserInterface extends JFrame {
                        break;
                 // user clicked "First"
 		        case "First":
-		            setFieldData(bean.moveFirst()); break;
+		            setFieldData(bean.moveFirst()); 
+		            emptyExerciseFields();
+		            listExercises(); break;
 		        // user clicked "Previous"
 		        case "Previous":
-		            setFieldData(bean.movePrevious()); break;
+		            setFieldData(bean.movePrevious()); 
+		            emptyExerciseFields();
+		            listExercises(); break;
 		        // user clicked "Next"
 		        case "Next":
-		            setFieldData(bean.moveNext()); break;
+		            setFieldData(bean.moveNext()); 
+		            emptyExerciseFields();
+		            listExercises(); break;
 		        // user clicked "Last"
 		        case "Last":
-		            setFieldData(bean.moveLast()); break;
+		            setFieldData(bean.moveLast()); 
+		            emptyExerciseFields();
+		            listExercises(); break;
                 default:
                     JOptionPane.showMessageDialog(null,
                     "invalid command");
             }
+        }
+    }
+    
+    // list the exercises for the current workout on the exercise list panel
+    private void listExercises() {
+        // get all exercises for the current workout
+        TreeMap<String, String> workoutExercises = bean.getWorkoutExercises();
+        exerciseListPanel.removeAll();
+        exerciseListPanel.updateUI();
+        for (String exercise : workoutExercises.keySet()) {
+        	exerciseListPanel.add(new JLabel(exercise + ": " + workoutExercises.get(exercise)));
+        }
+        exerciseListPanel.revalidate();
+        exerciseListPanel.repaint();
+        // ***** TEST *****
+        for (String exercise : workoutExercises.keySet()) {
+        	System.out.println("Exercise: " + exercise + ", WSR: " + workoutExercises.get(exercise));
         }
     }
 	
@@ -223,6 +242,9 @@ public class GainzJournalUserInterface extends JFrame {
     			if (bean.addMoreSetsAndReps(currentExercise) != null) {
     				JOptionPane.showMessageDialog(null, "Additional weight, sets, "
     						+ "and reps added successfully.");
+    				// UPDATE TREEMAP
+    				bean.updateExerciseMap(currentExercise);
+                    // ***** TEST TREEMAP *****
     			}
     			break;
     		case "Add Exercise":
@@ -249,8 +271,8 @@ public class GainzJournalUserInterface extends JFrame {
     	return ex;
     }
     
-    private void exerciseSetFieldData(Exercise currentExercise) {
-    	exerciseField.setText(currentExercise.getExerciseName());
+    private void emptyExerciseFields() {
+    	exerciseField.setText("");
     	weightField.setText("");
     	setsField.setText("");
     	repsField.setText("");
@@ -268,8 +290,6 @@ public class GainzJournalUserInterface extends JFrame {
 	public GainzJournalUserInterface() {
 		initComponents();
 		myInitComponents();
-		// TEST the TREE MAP *****
-		testTreeMap();
 	}
 	
 	public void myInitComponents() {
@@ -402,6 +422,15 @@ public class GainzJournalUserInterface extends JFrame {
 		addMoreSetsButton = new JButton("Add weight, sets, reps");
 		addMoreSetsButton.setBounds(240, 28, 149, 28);
 		exercisePanel.add(addMoreSetsButton);
+		
+		exerciseListPanel = new JPanel();
+		panel_1.add(exerciseListPanel, "cell 0 3 2 1,grow");
+		GridBagLayout gbl_panel_2 = new GridBagLayout();
+		gbl_panel_2.columnWidths = new int[]{0};
+		gbl_panel_2.rowHeights = new int[]{0};
+		gbl_panel_2.columnWeights = new double[]{Double.MIN_VALUE};
+		gbl_panel_2.rowWeights = new double[]{Double.MIN_VALUE};
+		exerciseListPanel.setLayout(gbl_panel_2);
 	}
 
 	/**
