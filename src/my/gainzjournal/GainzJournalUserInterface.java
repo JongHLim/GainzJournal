@@ -1,6 +1,7 @@
 package my.gainzjournal;
 
 import java.awt.EventQueue;
+import java.awt.GridBagConstraints;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -21,6 +22,7 @@ import java.util.TreeMap;
 
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+import java.awt.GridBagLayout;
 
 
 public class GainzJournalUserInterface extends JFrame {
@@ -183,8 +185,26 @@ public class GainzJournalUserInterface extends JFrame {
         TreeMap<String, String> workoutExercises = bean.getWorkoutExercises();
         exerciseListPanel.removeAll();
         exerciseListPanel.updateUI();
+        
+        JLabel label;
+        GridBagLayout gbl_exerciseListPanel = new GridBagLayout();
+		gbl_exerciseListPanel.columnWidths = new int[]{0};
+		gbl_exerciseListPanel.rowHeights = new int[]{0};
+		gbl_exerciseListPanel.columnWeights = new double[]{Double.MIN_VALUE};
+		gbl_exerciseListPanel.rowWeights = new double[]{Double.MIN_VALUE};
+		exerciseListPanel.setLayout(gbl_exerciseListPanel);
+		GridBagConstraints c = new GridBagConstraints();
+		
+    	int i = 0;
         for (String exercise : workoutExercises.keySet()) {
-        	exerciseListPanel.add(new JLabel(exercise + ": " + workoutExercises.get(exercise)));
+
+        	label = new JLabel(exercise + ": " + workoutExercises.get(exercise));
+        	c.fill = GridBagConstraints.HORIZONTAL;
+        	c.gridx = 0;
+        	c.gridy = i;
+        	System.out.println(i);
+        	exerciseListPanel.add(label, c);
+        	i++;
         }
         exerciseListPanel.revalidate();
         exerciseListPanel.repaint();
@@ -440,8 +460,14 @@ public class GainzJournalUserInterface extends JFrame {
 		exercisePanel.add(addMoreSetsButton);
 		
 		exerciseListPanel = new JPanel();
-		exerciseListPanel.setBounds(7, 138, 424, 52);
+		exerciseListPanel.setBounds(0, 129, 438, 61);
 		panel_1.add(exerciseListPanel);
+		GridBagLayout gbl_exerciseListPanel = new GridBagLayout();
+		gbl_exerciseListPanel.columnWidths = new int[]{0};
+		gbl_exerciseListPanel.rowHeights = new int[]{0};
+		gbl_exerciseListPanel.columnWeights = new double[]{Double.MIN_VALUE};
+		gbl_exerciseListPanel.rowWeights = new double[]{Double.MIN_VALUE};
+		exerciseListPanel.setLayout(gbl_exerciseListPanel);
 	}
 
 	/**
