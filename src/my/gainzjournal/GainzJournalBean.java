@@ -60,9 +60,11 @@ public class GainzJournalBean {
     
     // when the user clicks "Save"
     public Workout create(Workout w) {
+    	int id =0;
         try {
             workoutRowSet.moveToInsertRow();
             workoutRowSet.updateInt("workoutId", w.getWorkoutId());
+            id = w.getWorkoutId();
             workoutRowSet.updateString("date", w.getDate());
             workoutRowSet.updateString("workoutType", w.getWorkoutType());
             
@@ -79,6 +81,16 @@ public class GainzJournalBean {
             }
          ex.printStackTrace();
       }
+        try {
+        	if (id != 0) {
+            	exerciseRowSet.setCommand("SELECT * FROM Exercise WHERE workoutId='" + id + "';");
+            	exerciseRowSet.execute();
+            	exerciseRowSet.next();
+        	}
+
+        } catch (SQLException ex) {
+        	ex.printStackTrace();
+        }
       return w;
    }
     
@@ -137,14 +149,15 @@ public class GainzJournalBean {
            } catch (SQLException e) { }
            ex.printStackTrace();
         }
-
      }
     
     public Workout getCurrent() {
         Workout w = new Workout();
+        int id = 0;
         try {
             workoutRowSet.moveToCurrentRow();
             w.setWorkoutId(workoutRowSet.getInt("workoutId"));
+            id = workoutRowSet.getInt("workoutId");
             w.setDate(workoutRowSet.getString("date"));
             w.setWorkoutType(workoutRowSet.getString("workoutType"));
 
@@ -152,14 +165,26 @@ public class GainzJournalBean {
         } catch (SQLException ex) {
            ex.printStackTrace();
         }
+        try {
+        	if (id != 0) {
+            	exerciseRowSet.setCommand("SELECT * FROM Exercise WHERE workoutId='" + id + "';");
+            	exerciseRowSet.execute();
+            	exerciseRowSet.next();
+        	}
+
+        } catch (SQLException ex) {
+        	ex.printStackTrace();
+        }
         return w;
      }
     
     public Workout moveFirst() {
         Workout w = new Workout();
+        int id = 0;
         try {
             workoutRowSet.first();
             w.setWorkoutId(workoutRowSet.getInt("workoutId"));
+            id = workoutRowSet.getInt("workoutId");
             w.setDate(workoutRowSet.getString("date"));
             w.setWorkoutType(workoutRowSet.getString("workoutType"));
             // ***** FINISH OTHERS *****
@@ -167,49 +192,96 @@ public class GainzJournalBean {
         } catch (SQLException ex) {
            ex.printStackTrace();
         }
+        
+        try {
+        	if (id != 0) {
+            	exerciseRowSet.setCommand("SELECT * FROM Exercise WHERE workoutId='" + id + "';");
+            	exerciseRowSet.execute();
+            	exerciseRowSet.next();
+        	}
+
+        } catch (SQLException ex) {
+        	ex.printStackTrace();
+        }
         return w;
      }
 
      public Workout moveLast() {
         Workout w = new Workout();
+        int id = 0;
         try {
             workoutRowSet.last();
             w.setWorkoutId(workoutRowSet.getInt("workoutId"));
+            id = workoutRowSet.getInt("workoutId");
             w.setDate(workoutRowSet.getString("date"));
             w.setWorkoutType(workoutRowSet.getString("workoutType"));
            // ***** FINISH OTHERS *****
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+        try {
+        	if (id != 0) {
+            	exerciseRowSet.setCommand("SELECT * FROM Exercise WHERE workoutId='" + id + "';");
+            	exerciseRowSet.execute();
+            	exerciseRowSet.next();
+        	}
+
+        } catch (SQLException ex) {
+        	ex.printStackTrace();
+        }
         return w;
      }
 
      public Workout moveNext() {
         Workout w = new Workout();
+        int id = 0;
         try {
            if (workoutRowSet.next() == false)
                workoutRowSet.previous();
            w.setWorkoutId(workoutRowSet.getInt("workoutId"));
+           id = workoutRowSet.getInt("workoutId");
            w.setDate(workoutRowSet.getString("date"));
            w.setWorkoutType(workoutRowSet.getString("workoutType"));
            // ***** FINISH OTHERS *****
         } catch (SQLException ex) {
            ex.printStackTrace();
         }
+        try {
+        	if (id != 0) {
+            	exerciseRowSet.setCommand("SELECT * FROM Exercise WHERE workoutId='" + id + "';");
+            	exerciseRowSet.execute();
+            	exerciseRowSet.next();
+        	}
+
+        } catch (SQLException ex) {
+        	ex.printStackTrace();
+        }
         return w;
      }
 
      public Workout movePrevious() {
         Workout w = new Workout();
+        int id = 0;
         try {
            if (workoutRowSet.previous() == false)
                workoutRowSet.next();
            w.setWorkoutId(workoutRowSet.getInt("workoutId"));
+           id = workoutRowSet.getInt("workoutId");
            w.setDate(workoutRowSet.getString("date"));
            w.setWorkoutType(workoutRowSet.getString("workoutType"));
            // ***** FINISH OTHERS *****
         } catch (SQLException ex) {
            ex.printStackTrace();
+        }
+        try {
+        	if (id != 0) {
+            	exerciseRowSet.setCommand("SELECT * FROM Exercise WHERE workoutId='" + id + "';");
+            	exerciseRowSet.execute();
+            	exerciseRowSet.next();
+        	}
+
+        } catch (SQLException ex) {
+        	ex.printStackTrace();
         }
         return w;
      }
@@ -217,7 +289,10 @@ public class GainzJournalBean {
      public Exercise addMoreSetsAndReps(Exercise ex) {
     	 try {
     		 // update to the form 135*1*10/185*1*10
-    		 exerciseRowSet.next();
+    		 if (exerciseRowSet.isAfterLast())
+    			 exerciseRowSet.previous();
+    		 else
+    			 exerciseRowSet.moveToCurrentRow();
     		 String newWsr = ex.getWeightSetsReps();
     		 String oldWsr = exerciseRowSet.getString("weightSetsReps");
     		 exerciseRowSet.updateString("weightSetsReps", oldWsr + "/" + newWsr);
@@ -250,7 +325,7 @@ public class GainzJournalBean {
      }
      
      public int getLastExerciseId() {
-    	 int id = 0;
+    	 int id = 1;
     	 try {
     		 if (exerciseRowSet.first()) {
         		 exerciseRowSet.last();
@@ -297,10 +372,13 @@ public class GainzJournalBean {
      }
      
      // we need to update the map every time we add more (weight, sets, reps) and new exercises
-     public void updateExerciseMap(Exercise ex) {
+     public void updateExercisesMap(Exercise ex) {
     	 int workoutId = ex.getWorkoutId();
     	 String exerciseName = ex.getExerciseName();
     	 String wsr = ex.getWeightSetsReps();
+    	 // *****
+    	 System.out.println("updating exercise map... WSR: " + wsr);
+    	 System.out.println("WORKOUT ID: " + workoutId);
     	 TreeMap<String, String> exercises;
     	 if (exerciseTreeMap.containsKey(workoutId)) {
     		 exercises = exerciseTreeMap.get(workoutId);
@@ -316,10 +394,13 @@ public class GainzJournalBean {
      public TreeMap<String, String> getWorkoutExercises() {
     	 TreeMap<String, String> currentExercises;
     	 try {
-    		 
+
     		 workoutRowSet.moveToCurrentRow();
         	 int id = workoutRowSet.getInt("workoutId");
         	 currentExercises = exerciseTreeMap.get(id);
+        	 // *****
+        	 System.out.println("Getting current workout exercises... workoutID: " +
+        			 id);
         	 return currentExercises;
     	 } catch (SQLException e) {
     		 

@@ -16,16 +16,12 @@ import javax.swing.JOptionPane;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Map;
+
 import java.util.TreeMap;
 
-import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
 
-import java.awt.GridBagLayout;
 
 public class GainzJournalUserInterface extends JFrame {
 
@@ -93,10 +89,13 @@ public class GainzJournalUserInterface extends JFrame {
                         		"New workout entry was created successfully.");
                         newButton.setText("New");
                         // update the TreeMap
-                        bean.updateExerciseMap(currentExercise);
+                        bean.updateExercisesMap(currentExercise);
                         // ***** TEST TREE MAP *****
                         
                         listExercises();
+                        
+                        // ***** TEST *****
+                        System.out.println("Workout ID : " + w.getWorkoutId());
                     }
                     break;
                 // user clicked "New"
@@ -118,6 +117,7 @@ public class GainzJournalUserInterface extends JFrame {
                     setFieldData(w);
                     emptyExerciseFields();
                     newButton.setText("Save");
+                    clearExerciseListPanel();
                     break;
                     
                 // user clicked "Update"
@@ -193,6 +193,13 @@ public class GainzJournalUserInterface extends JFrame {
         	System.out.println("Exercise: " + exercise + ", WSR: " + workoutExercises.get(exercise));
         }
     }
+    
+    private void clearExerciseListPanel() {
+    	exerciseListPanel.removeAll();
+        exerciseListPanel.updateUI();
+        exerciseListPanel.revalidate();
+        exerciseListPanel.repaint();
+    }
 	
     private Workout getFieldData() {
         Workout w = new Workout();
@@ -225,6 +232,7 @@ public class GainzJournalUserInterface extends JFrame {
     	public void actionPerformed(ActionEvent event) {
     		
     		currentExercise = exerciseGetFieldData(currentExercise);
+    		currentExercise.setWorkoutId(Integer.parseInt(workoutIdField.getText()));
     		
     		switch (event.getActionCommand()) {
     		
@@ -243,8 +251,9 @@ public class GainzJournalUserInterface extends JFrame {
     				JOptionPane.showMessageDialog(null, "Additional weight, sets, "
     						+ "and reps added successfully.");
     				// UPDATE TREEMAP
-    				bean.updateExerciseMap(currentExercise);
-                    // ***** TEST TREEMAP *****
+    				bean.updateExercisesMap(currentExercise);
+    				listExercises();
+                	System.out.println("WORK WORK WORKOUTID: " + currentExercise.getWorkoutId());
     			}
     			break;
     		case "Add Exercise":
@@ -352,31 +361,38 @@ public class GainzJournalUserInterface extends JFrame {
 		
 		JPanel panel_1 = new JPanel();
 		scrollPane.setViewportView(panel_1);
-		panel_1.setLayout(new MigLayout("", "[][grow]", "[][][grow][grow]"));
+		panel_1.setLayout(null);
 		
 		JLabel lblWorkoutId = new JLabel("Workout Date");
-		panel_1.add(lblWorkoutId, "cell 0 0,alignx trailing");
+		lblWorkoutId.setBounds(7, 13, 74, 16);
+		panel_1.add(lblWorkoutId);
 		
 		workoutDateField = new JTextField();
-		panel_1.add(workoutDateField, "flowx,cell 1 0,alignx left");
+		workoutDateField.setBounds(85, 7, 122, 28);
+		panel_1.add(workoutDateField);
 		workoutDateField.setColumns(10);
 		
 		JLabel lblWorkoutType = new JLabel("Workout Type");
-		panel_1.add(lblWorkoutType, "cell 0 1,alignx trailing");
+		lblWorkoutType.setBounds(7, 45, 74, 16);
+		panel_1.add(lblWorkoutType);
 		
 		workoutTypeField = new JTextField();
-		panel_1.add(workoutTypeField, "cell 1 1,alignx left");
+		workoutTypeField.setBounds(85, 39, 122, 28);
+		panel_1.add(workoutTypeField);
 		workoutTypeField.setColumns(10);
 		
 		JLabel lblWorkoutDate = new JLabel("Workout ID");
-		panel_1.add(lblWorkoutDate, "cell 1 0");
+		lblWorkoutDate.setBounds(211, 13, 60, 16);
+		panel_1.add(lblWorkoutDate);
 		
 		workoutIdField = new JTextField();
-		panel_1.add(workoutIdField, "cell 1 0,growx");
+		workoutIdField.setBounds(275, 7, 156, 28);
+		panel_1.add(workoutIdField);
 		workoutIdField.setColumns(10);
 		
 		JPanel exercisePanel = new JPanel();
-		panel_1.add(exercisePanel, "cell 0 2 2 1,grow");
+		exercisePanel.setBounds(7, 71, 424, 55);
+		panel_1.add(exercisePanel);
 		exercisePanel.setLayout(null);
 		
 		JLabel lblExercise = new JLabel("Exercise");
@@ -389,29 +405,29 @@ public class GainzJournalUserInterface extends JFrame {
 		exerciseField.setColumns(10);
 		
 		JLabel lblWeight = new JLabel("Weight");
-		lblWeight.setBounds(6, 34, 46, 16);
+		lblWeight.setBounds(6, 32, 46, 16);
 		exercisePanel.add(lblWeight);
 		
 		weightField = new JTextField();
-		weightField.setBounds(47, 31, 40, 26);
+		weightField.setBounds(47, 29, 40, 26);
 		exercisePanel.add(weightField);
 		weightField.setColumns(10);
 		
 		JLabel lblSets = new JLabel("Sets");
-		lblSets.setBounds(97, 34, 25, 16);
+		lblSets.setBounds(97, 32, 25, 16);
 		exercisePanel.add(lblSets);
 		
 		setsField = new JTextField();
-		setsField.setBounds(124, 31, 30, 26);
+		setsField.setBounds(124, 29, 30, 26);
 		exercisePanel.add(setsField);
 		setsField.setColumns(10);
 		
 		JLabel lblReps = new JLabel("Reps");
-		lblReps.setBounds(164, 34, 30, 16);
+		lblReps.setBounds(164, 32, 30, 16);
 		exercisePanel.add(lblReps);
 		
 		repsField = new JTextField();
-		repsField.setBounds(197, 31, 30, 26);
+		repsField.setBounds(197, 29, 30, 26);
 		exercisePanel.add(repsField);
 		repsField.setColumns(10);
 		
@@ -420,17 +436,12 @@ public class GainzJournalUserInterface extends JFrame {
 		exercisePanel.add(addExerciseButton);
 		
 		addMoreSetsButton = new JButton("Add weight, sets, reps");
-		addMoreSetsButton.setBounds(240, 28, 149, 28);
+		addMoreSetsButton.setBounds(240, 26, 149, 28);
 		exercisePanel.add(addMoreSetsButton);
 		
 		exerciseListPanel = new JPanel();
-		panel_1.add(exerciseListPanel, "cell 0 3 2 1,grow");
-		GridBagLayout gbl_panel_2 = new GridBagLayout();
-		gbl_panel_2.columnWidths = new int[]{0};
-		gbl_panel_2.rowHeights = new int[]{0};
-		gbl_panel_2.columnWeights = new double[]{Double.MIN_VALUE};
-		gbl_panel_2.rowWeights = new double[]{Double.MIN_VALUE};
-		exerciseListPanel.setLayout(gbl_panel_2);
+		exerciseListPanel.setBounds(7, 138, 424, 52);
+		panel_1.add(exerciseListPanel);
 	}
 
 	/**
