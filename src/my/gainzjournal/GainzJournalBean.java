@@ -12,10 +12,10 @@ package my.gainzjournal;
 
 import java.sql.*;
 import java.util.TreeMap;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import javax.sql.rowset.JdbcRowSet;
-import javax.sql.rowset.JoinRowSet;
-
 import com.sun.rowset.JdbcRowSetImpl;
 
 import my.gainzjournal.datastructures.*;
@@ -29,6 +29,8 @@ public class GainzJournalBean {
     private JdbcRowSet workoutRowSet = null;
     private JdbcRowSet exerciseRowSet = null;
 	private TreeMap<Integer, TreeMap<String, String>> exerciseTreeMap = new TreeMap<>();
+	// to use for deleting the workouts in the database
+	private TreeMap<Integer, HashSet<Integer>> allExerciseIds = new TreeMap<>();
 	private int lastExerciseId = 0;
 	 
     public GainzJournalBean() {
@@ -141,14 +143,31 @@ public class GainzJournalBean {
      }
     
     public void delete() {
+    	int workoutId = 0;
         try {
             workoutRowSet.moveToCurrentRow();
+            workoutId = workoutRowSet.getInt("workoutId");
             workoutRowSet.deleteRow();
         } catch (SQLException ex) {
            try {
                workoutRowSet.rollback();
            } catch (SQLException e) { }
            ex.printStackTrace();
+        }
+        
+        // DELETE ALL exercises for current workout
+        HashSet<Integer> exerciseIds = allExerciseIds.get(workoutId);
+        Iterator<Integer> it = exerciseIds.iterator();
+        try {
+        	while (it.hasNext()) {
+        		int exerciseId = it.next();
+        		exerciseRowSet.setCommand("SELECT * FROM Exercise WHERE exerciseId='" + exerciseId + "';");
+        		exerciseRowSet.execute();
+        		exerciseRowSet.next();
+        		exerciseRowSet.deleteRow();
+        	}
+        } catch (SQLException ex) {
+        	ex.printStackTrace();
         }
      }
     
@@ -325,27 +344,10 @@ public class GainzJournalBean {
     	 return id;
      }
      
-     // sql way
-//     // only works for the "New" button not "Add Exercise" button
-//     public int getLastExerciseId() {
-//    	 int id = 0;
-//    	 try {
-//    		 if (exerciseRowSet.first()) {
-//        		 exerciseRowSet.last();
-//        		 id += exerciseRowSet.getInt("exerciseId");
-//
-//        		 return id;
-//    		 }
-//
-//    	 } catch(SQLException e) {
-//    		 e.printStackTrace();
-//    	 }
-//    	 return id;
-//     }
-     
      // create a TreeMap of <Workout ID, <Exercise, WeightSetsReps>>
      public TreeMap<Integer, TreeMap<String, String>> fillExerciseMap() {
     	 TreeMap<String, String> exercises;
+    	 HashSet<Integer> exerciseIds;
     	 try {
     		 // RowSet is empty
         	 if (!exerciseRowSet.isBeforeFirst())
@@ -353,6 +355,7 @@ public class GainzJournalBean {
         		 return exerciseTreeMap;
         	 exerciseRowSet.beforeFirst();
         	 while (exerciseRowSet.next()) {
+        		 int exerciseId = exerciseRowSet.getInt("exerciseId");
         		 int workoutId = exerciseRowSet.getInt("workoutId");
         		 String exercise = exerciseRowSet.getString("exercise");
         		 String weightSetsReps = exerciseRowSet.getString("weightSetsReps");
@@ -372,6 +375,14 @@ public class GainzJournalBean {
         		 int id = exerciseRowSet.getInt("exerciseId");
         		 if (id > lastExerciseId)
         			 lastExerciseId = id;
+        		 
+        		 // for exercise IDs
+        		 if (allExerciseIds.containsKey(workoutId))
+        			 exerciseIds = allExerciseIds.get(workoutId);
+        		 else
+        			 exerciseIds = new HashSet<>();
+    			 exerciseIds.add(exerciseId);
+    			 allExerciseIds.put(workoutId, exerciseIds);
         	 }
     	 } catch (SQLException e) {
     		 e.printStackTrace();
@@ -398,9 +409,18 @@ public class GainzJournalBean {
 		 exercises.put(exerciseName, wsr);
 		 exerciseTreeMap.put(workoutId, exercises);
 		 
-		 int id = ex.getExerciseId();
-		 if (id > lastExerciseId)
-			 lastExerciseId = id;
+		 int exerciseId = ex.getExerciseId();
+		 if (exerciseId > lastExerciseId)
+			 lastExerciseId = exerciseId;
+		 
+		 // for exercise IDs
+		 HashSet<Integer> exerciseIds;
+		 if (allExerciseIds.containsKey(workoutId))
+			 exerciseIds = allExerciseIds.get(workoutId);
+		 else
+			 exerciseIds = new HashSet<>();
+		 exerciseIds.add(exerciseId);
+		 allExerciseIds.put(workoutId, exerciseIds);
      }
      
      public TreeMap<String, String> getWorkoutExercises() {
