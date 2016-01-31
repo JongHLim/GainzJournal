@@ -1,5 +1,6 @@
 package my.gainzjournal;
 
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 
@@ -179,39 +180,73 @@ public class GainzJournalUserInterface extends JFrame {
         }
     }
     
-    // list the exercises for the current workout on the exercise list panel
-    private void listExercises() {
-        // get all exercises for the current workout
-        TreeMap<String, String> workoutExercises = bean.getWorkoutExercises();
-        exerciseListPanel.removeAll();
-        exerciseListPanel.updateUI();
-        
-        JLabel label;
-        GridBagLayout gbl_exerciseListPanel = new GridBagLayout();
-		gbl_exerciseListPanel.columnWidths = new int[]{0};
-		gbl_exerciseListPanel.rowHeights = new int[]{0};
-		gbl_exerciseListPanel.columnWeights = new double[]{Double.MIN_VALUE};
-		gbl_exerciseListPanel.rowWeights = new double[]{Double.MIN_VALUE};
-		exerciseListPanel.setLayout(gbl_exerciseListPanel);
-		GridBagConstraints c = new GridBagConstraints();
-		
-    	int i = 0;
-        for (String exercise : workoutExercises.keySet()) {
+    private class ExerciseButtonHandler implements ActionListener {
+    	@Override
+    	public void actionPerformed(ActionEvent event) {
+    		
+    		exerciseId = 1001;
+    		
+    		currentExercise = exerciseGetFieldData(currentExercise);
+    		currentExercise.setWorkoutId(Integer.parseInt(workoutIdField.getText()));
+    		Workout w = getFieldData();
+    		
+    		switch (event.getActionCommand()) {
+    		
+    		case "Add weight, sets, reps":
+    			if (workoutIdField.getText().equals("")) {
+    				JOptionPane.showMessageDialog(null, "Please create a workout entry first.");
+    				return;
+    			}
+    			if (exerciseField.getText().equals("")) {
+    				JOptionPane.showMessageDialog(null, "Please input the name of the exercise.");
+    				return;
+    			}
+    			if (isWSREmpty()) {
+                    JOptionPane.showMessageDialog(null, 
+                    		"Please input the amount of weight lifted,"
+                    		+ " number of sets, and number of reps for each set.");
+                    return;
+    			}
+    			if (bean.addMoreSetsAndReps(currentExercise) != null) {
+    				JOptionPane.showMessageDialog(null, "Additional weight, sets, "
+    						+ "and reps added successfully.");
+    				// UPDATE TREEMAP
+    				bean.updateExercisesMap(currentExercise);
+    				listExercises();
+                	System.out.println("WORK WORK WORKOUTID: " + currentExercise.getWorkoutId());
+    			}
+    			break;
+    		case "Add Exercise":
+    			if (workoutIdField.getText().equals("")) {
+    				JOptionPane.showMessageDialog(null, "Please create a workout entry first.");
+    				return;
+    			}
+    			if (exerciseField.getText().equals("")) {
+    				JOptionPane.showMessageDialog(null, "Please input the name of the exercise.");
+    				return;
+    			}
+    			if (isWSREmpty()) {
+                    JOptionPane.showMessageDialog(null, 
+                    		"Please input the amount of weight lifted,"
+                    		+ " number of sets, and number of reps for each set.");
+                    return;
+    			}
+    			exerciseId += bean.getLastExerciseId();
+    			// ********
+    			System.out.println("EXERCISE ID in BUTTON HANDLER: " + exerciseId);
+    			currentExercise.setExerciseId(exerciseId);
 
-        	label = new JLabel(exercise + ": " + workoutExercises.get(exercise));
-        	c.fill = GridBagConstraints.HORIZONTAL;
-        	c.gridx = 0;
-        	c.gridy = i;
-        	System.out.println(i);
-        	exerciseListPanel.add(label, c);
-        	i++;
-        }
-        exerciseListPanel.revalidate();
-        exerciseListPanel.repaint();
-        // ***** TEST *****
-        for (String exercise : workoutExercises.keySet()) {
-        	System.out.println("Exercise: " + exercise + ", WSR: " + workoutExercises.get(exercise));
-        }
+    			if (bean.createExercise(currentExercise, w) != null) {
+    				JOptionPane.showMessageDialog(null, "New exercise created successfully.");
+    				// UPDATE TREEMAP
+    				bean.updateExercisesMap(currentExercise);
+    				listExercises();
+                	System.out.println("WORK WORK WORKOUTID: " + currentExercise.getWorkoutId());
+    			}
+    			break;
+    		}
+    		
+    	}
     }
     
     private void clearExerciseListPanel() {
@@ -246,43 +281,6 @@ public class GainzJournalUserInterface extends JFrame {
             && setsField.getText().trim().isEmpty()
             && repsField.getText().trim().isEmpty());
    }
-    
-    private class ExerciseButtonHandler implements ActionListener {
-    	@Override
-    	public void actionPerformed(ActionEvent event) {
-    		
-    		currentExercise = exerciseGetFieldData(currentExercise);
-    		currentExercise.setWorkoutId(Integer.parseInt(workoutIdField.getText()));
-    		
-    		switch (event.getActionCommand()) {
-    		
-    		case "Add weight, sets, reps":
-    			if (exerciseField.getText().equals("")) {
-    				JOptionPane.showMessageDialog(null, "Please input the name of the exercise.");
-    				return;
-    			}
-    			if (isWSREmpty()) {
-                    JOptionPane.showMessageDialog(null, 
-                    		"Please input the amount of weight lifted,"
-                    		+ " number of sets, and number of reps for each set.");
-                    return;
-    			}
-    			if (bean.addMoreSetsAndReps(currentExercise) != null) {
-    				JOptionPane.showMessageDialog(null, "Additional weight, sets, "
-    						+ "and reps added successfully.");
-    				// UPDATE TREEMAP
-    				bean.updateExercisesMap(currentExercise);
-    				listExercises();
-                	System.out.println("WORK WORK WORKOUTID: " + currentExercise.getWorkoutId());
-    			}
-    			break;
-    		case "Add Exercise":
-    			break;
-    			
-    		}
-    		
-    	}
-    }
     
     private Exercise exerciseGetFieldData(Exercise ex) {
     	
@@ -462,12 +460,6 @@ public class GainzJournalUserInterface extends JFrame {
 		exerciseListPanel = new JPanel();
 		exerciseListPanel.setBounds(0, 129, 438, 61);
 		panel_1.add(exerciseListPanel);
-		GridBagLayout gbl_exerciseListPanel = new GridBagLayout();
-		gbl_exerciseListPanel.columnWidths = new int[]{0};
-		gbl_exerciseListPanel.rowHeights = new int[]{0};
-		gbl_exerciseListPanel.columnWeights = new double[]{Double.MIN_VALUE};
-		gbl_exerciseListPanel.rowWeights = new double[]{Double.MIN_VALUE};
-		exerciseListPanel.setLayout(gbl_exerciseListPanel);
 	}
 
 	/**
@@ -490,4 +482,39 @@ public class GainzJournalUserInterface extends JFrame {
 			}
 		});
 	}
+	
+    // list the exercises for the current workout on the exercise list panel
+    private void listExercises() {
+        // get all exercises for the current workout
+        TreeMap<String, String> workoutExercises = bean.getWorkoutExercises();
+        exerciseListPanel.removeAll();
+        exerciseListPanel.updateUI();
+        
+        JLabel label;
+        GridBagLayout gbl_exerciseListPanel = new GridBagLayout();
+		gbl_exerciseListPanel.columnWidths = new int[]{0};
+		gbl_exerciseListPanel.rowHeights = new int[]{0};
+		gbl_exerciseListPanel.columnWeights = new double[]{Double.MIN_VALUE};
+		gbl_exerciseListPanel.rowWeights = new double[]{Double.MIN_VALUE};
+		exerciseListPanel.setLayout(gbl_exerciseListPanel);
+		GridBagConstraints c = new GridBagConstraints();
+		
+    	int i = 0;
+        for (String exercise : workoutExercises.keySet()) {
+
+        	label = new JLabel(exercise + ": " + workoutExercises.get(exercise));
+        	c.fill = GridBagConstraints.HORIZONTAL;
+        	c.gridx = 0;
+        	c.gridy = i;
+        	exerciseListPanel.add(label, c);
+        	i++;
+        }
+        exerciseListPanel.revalidate();
+        exerciseListPanel.repaint();
+        
+        // ***** TEST *****
+        for (String exercise : workoutExercises.keySet()) {
+        	System.out.println("Exercise: " + exercise + ", WSR: " + workoutExercises.get(exercise));
+        }
+    }
 }

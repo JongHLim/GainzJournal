@@ -29,6 +29,7 @@ public class GainzJournalBean {
     private JdbcRowSet workoutRowSet = null;
     private JdbcRowSet exerciseRowSet = null;
 	private TreeMap<Integer, TreeMap<String, String>> exerciseTreeMap = new TreeMap<>();
+	private int lastExerciseId = 0;
 	 
     public GainzJournalBean() {
         try {
@@ -324,19 +325,23 @@ public class GainzJournalBean {
     	 return id;
      }
      
-     public int getLastExerciseId() {
-    	 int id = 1;
-    	 try {
-    		 if (exerciseRowSet.first()) {
-        		 exerciseRowSet.last();
-        		 id += exerciseRowSet.getInt("exerciseId");
-        		 return id;
-    		 }
-    	 } catch(SQLException e) {
-    		 e.printStackTrace();
-    	 }
-    	 return id;
-     }
+     // sql way
+//     // only works for the "New" button not "Add Exercise" button
+//     public int getLastExerciseId() {
+//    	 int id = 0;
+//    	 try {
+//    		 if (exerciseRowSet.first()) {
+//        		 exerciseRowSet.last();
+//        		 id += exerciseRowSet.getInt("exerciseId");
+//
+//        		 return id;
+//    		 }
+//
+//    	 } catch(SQLException e) {
+//    		 e.printStackTrace();
+//    	 }
+//    	 return id;
+//     }
      
      // create a TreeMap of <Workout ID, <Exercise, WeightSetsReps>>
      public TreeMap<Integer, TreeMap<String, String>> fillExerciseMap() {
@@ -364,6 +369,9 @@ public class GainzJournalBean {
         			 exercises.put(exercise, weightSetsReps);
         			 exerciseTreeMap.put(workoutId, exercises);
         		 }
+        		 int id = exerciseRowSet.getInt("exerciseId");
+        		 if (id > lastExerciseId)
+        			 lastExerciseId = id;
         	 }
     	 } catch (SQLException e) {
     		 e.printStackTrace();
@@ -389,6 +397,10 @@ public class GainzJournalBean {
     	 }
 		 exercises.put(exerciseName, wsr);
 		 exerciseTreeMap.put(workoutId, exercises);
+		 
+		 int id = ex.getExerciseId();
+		 if (id > lastExerciseId)
+			 lastExerciseId = id;
      }
      
      public TreeMap<String, String> getWorkoutExercises() {
@@ -407,5 +419,9 @@ public class GainzJournalBean {
     	 }
     	 currentExercises = new TreeMap<>();
     	 return currentExercises;
+     }
+     
+     public int getLastExerciseId() {
+    	 return this.lastExerciseId;
      }
 }
