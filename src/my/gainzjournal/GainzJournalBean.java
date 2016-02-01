@@ -62,6 +62,14 @@ public class GainzJournalBean {
         }
     }
     
+    public void saveHelper() {
+    	try {
+    		workoutRowSet.next();
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    	}
+    }
+    
     // when the user clicks "Save"
     public Workout create(Workout w) {
     	int id =0;
@@ -449,11 +457,13 @@ public class GainzJournalBean {
 		 allExerciseIds.put(workoutId, exerciseIds);
      }
      
-     public LinkedHashMap<String, String> getWorkoutExercises() {
+     public LinkedHashMap<String, String> getWorkoutExercises(boolean justSaved) {
     	 LinkedHashMap<String, String> currentExercises;
     	 try {
-
-    		 workoutRowSet.moveToCurrentRow();
+    		 if (justSaved)
+    			 workoutRowSet.next();
+    		 else
+    			 workoutRowSet.moveToCurrentRow();
         	 int id = workoutRowSet.getInt("workoutId");
         	 currentExercises = exerciseTreeMap.get(id);
         	 return currentExercises;

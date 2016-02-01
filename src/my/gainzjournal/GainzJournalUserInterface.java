@@ -63,10 +63,14 @@ public class GainzJournalUserInterface extends JFrame {
     private Exercise currentExercise = new Exercise();
     private JPanel exerciseListPanel;
     private JScrollPane scroll;
+    
+    private boolean justSaved;
 	
     private class ButtonHandler implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent event) {
+        	
+        	justSaved = false;
         	
         	workoutId = 1;
         	exerciseId = 1001;
@@ -94,6 +98,7 @@ public class GainzJournalUserInterface extends JFrame {
                         newButton.setText("New");
                         // update the TreeMap
                         bean.updateExercisesMap(currentExercise);
+                        justSaved = true;
                     }
                     break;
                 // user clicked "New"
@@ -202,14 +207,14 @@ public class GainzJournalUserInterface extends JFrame {
                     		+ " number of sets, and number of reps for each set.");
                     return;
     			}
-    			LinkedHashMap<String, String> workoutExercises = bean.getWorkoutExercises();
+    			LinkedHashMap<String, String> workoutExercises = bean.getWorkoutExercises(justSaved);
+    			justSaved = false;
     			if (bean.addMoreSetsAndReps(currentExercise, workoutExercises) != null) {
     				JOptionPane.showMessageDialog(null, "Additional weight, sets, "
     						+ "and reps added successfully.");
     				// UPDATE TREEMAP
     				bean.updateExercisesMap(currentExercise);
     				listExercises();
-                	System.out.println("WORK WORK WORKOUTID: " + currentExercise.getWorkoutId());
     			}
     			break;
     		case "Add Exercise":
@@ -229,7 +234,6 @@ public class GainzJournalUserInterface extends JFrame {
     			}
     			exerciseId += bean.getLastExerciseId();
     			// ********
-    			System.out.println("EXERCISE ID in BUTTON HANDLER: " + exerciseId);
     			currentExercise.setExerciseId(exerciseId);
 
     			if (bean.createExercise(currentExercise, w) != null) {
@@ -237,7 +241,6 @@ public class GainzJournalUserInterface extends JFrame {
     				// UPDATE TREEMAP
     				bean.updateExercisesMap(currentExercise);
     				listExercises();
-                	System.out.println("WORK WORK WORKOUTID: " + currentExercise.getWorkoutId());
     			}
     			break;
     		}
@@ -494,7 +497,7 @@ public class GainzJournalUserInterface extends JFrame {
     // list the exercises for the current workout on the exercise list panel
     private void listExercises() {
         // get all exercises for the current workout
-    	LinkedHashMap<String, String> workoutExercises = bean.getWorkoutExercises();
+    	LinkedHashMap<String, String> workoutExercises = bean.getWorkoutExercises(justSaved);
         exerciseListPanel.removeAll();
         exerciseListPanel.updateUI();
         
