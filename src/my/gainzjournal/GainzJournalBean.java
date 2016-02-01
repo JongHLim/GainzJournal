@@ -307,8 +307,33 @@ public class GainzJournalBean {
         return w;
      }
      
-     public Exercise addMoreSetsAndReps(Exercise ex) {
+     public Exercise addMoreSetsAndReps(Exercise ex, LinkedHashMap<String, String> workoutExercises) {
     	 try {
+    		 // get name of last exercise for given id
+    		 Iterator<String> it = workoutExercises.keySet().iterator();
+    		 String lastExercise = "";
+    		 while (it.hasNext())
+    			 lastExercise = it.next();
+    		 
+    		 // get current WorkoutId
+    		 int workoutId = 0;
+    		 try {
+    			 workoutRowSet.moveToCurrentRow();
+    			 workoutId = workoutRowSet.getInt("workoutId");
+    		 } catch (SQLException e) {
+    			 e.printStackTrace();
+    		 }
+    		 
+    		 try {
+            	exerciseRowSet.setCommand("SELECT * FROM Exercise WHERE exercise='" + lastExercise + "' "
+            			+ "AND workoutId='" + workoutId + "';");
+            	exerciseRowSet.execute();
+            	exerciseRowSet.next();
+    		 } catch (SQLException e) {
+    			e.printStackTrace();
+    		 }
+    		 
+    		 
     		 // update to the form 135*1*10/185*1*10
     		 if (exerciseRowSet.isAfterLast())
     			 exerciseRowSet.previous();

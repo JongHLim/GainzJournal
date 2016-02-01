@@ -94,12 +94,6 @@ public class GainzJournalUserInterface extends JFrame {
                         newButton.setText("New");
                         // update the TreeMap
                         bean.updateExercisesMap(currentExercise);
-                        // ***** TEST TREE MAP *****
-                        
-                        //listExercises();
-                        
-                        // ***** TEST *****
-                        //System.out.println("Workout ID : " + w.getWorkoutId());
                     }
                     break;
                 // user clicked "New"
@@ -208,7 +202,8 @@ public class GainzJournalUserInterface extends JFrame {
                     		+ " number of sets, and number of reps for each set.");
                     return;
     			}
-    			if (bean.addMoreSetsAndReps(currentExercise) != null) {
+    			LinkedHashMap<String, String> workoutExercises = bean.getWorkoutExercises();
+    			if (bean.addMoreSetsAndReps(currentExercise, workoutExercises) != null) {
     				JOptionPane.showMessageDialog(null, "Additional weight, sets, "
     						+ "and reps added successfully.");
     				// UPDATE TREEMAP
@@ -468,8 +463,6 @@ public class GainzJournalUserInterface extends JFrame {
 		gbl_exerciseListPanel.rowWeights = new double[]{Double.MIN_VALUE};
 		exerciseListPanel.setLayout(gbl_exerciseListPanel);
 		
-//		panel_1.add(exerciseListPanel);
-		
 		scroll = new JScrollPane(exerciseListPanel);
 		scroll.setBounds(0, 128, 431, 62);
 		scroll.setViewportView(exerciseListPanel);
@@ -528,8 +521,6 @@ public class GainzJournalUserInterface extends JFrame {
         exerciseListPanel.revalidate();
         exerciseListPanel.repaint();
         
-        // ***** TEST *****
-        System.out.println("The current workout ID is " + workoutId + ".");
         for (String exercise : workoutExercises.keySet()) {
         	System.out.println("Exercise: " + exercise + ", WSR: " + workoutExercises.get(exercise));
         }
