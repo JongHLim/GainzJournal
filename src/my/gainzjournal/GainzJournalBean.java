@@ -416,9 +416,7 @@ public class GainzJournalBean {
     	 int workoutId = ex.getWorkoutId();
     	 String exerciseName = ex.getExerciseName();
     	 String wsr = ex.getWeightSetsReps();
-    	 // *****
-    	 System.out.println("updating exercise map... WSR: " + wsr);
-    	 System.out.println("WORKOUT ID: " + workoutId);
+    	 
     	 LinkedHashMap<String, String> exercises;
     	 if (exerciseTreeMap.containsKey(workoutId)) {
     		 exercises = exerciseTreeMap.get(workoutId);

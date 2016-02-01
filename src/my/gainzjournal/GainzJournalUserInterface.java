@@ -251,7 +251,7 @@ public class GainzJournalUserInterface extends JFrame {
                     return;
     			}
     			exerciseId += bean.getLastExerciseId();
-    			// ********
+    			
     			currentExercise.setExerciseId(exerciseId);
 
     			if (bean.createExercise(currentExercise, w) != null) {
