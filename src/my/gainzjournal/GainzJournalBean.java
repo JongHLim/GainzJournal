@@ -430,9 +430,6 @@ public class GainzJournalBean {
     		 workoutRowSet.moveToCurrentRow();
         	 int id = workoutRowSet.getInt("workoutId");
         	 currentExercises = exerciseTreeMap.get(id);
-        	 // *****
-        	 System.out.println("Getting current workout exercises... workoutID: " +
-        			 id);
         	 return currentExercises;
     	 } catch (SQLException e) {
     		 

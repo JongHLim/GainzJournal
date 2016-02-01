@@ -95,10 +95,10 @@ public class GainzJournalUserInterface extends JFrame {
                         bean.updateExercisesMap(currentExercise);
                         // ***** TEST TREE MAP *****
                         
-                        listExercises();
+                        //listExercises();
                         
                         // ***** TEST *****
-                        System.out.println("Workout ID : " + w.getWorkoutId());
+                        //System.out.println("Workout ID : " + w.getWorkoutId());
                     }
                     break;
                 // user clicked "New"
@@ -369,7 +369,7 @@ public class GainzJournalUserInterface extends JFrame {
 		lastButton = new JButton("Last");
 		panel.add(lastButton);
 		
-		JLabel jlabel1 = new JLabel("Click the \"New\" to submit a new workout entry!");
+		JLabel jlabel1 = new JLabel("Click the \"New\" button to submit a new workout entry!");
 		jlabel1.setBounds(6, 6, 257, 16);
 		contentPane.add(jlabel1);
 		
@@ -513,6 +513,7 @@ public class GainzJournalUserInterface extends JFrame {
         exerciseListPanel.repaint();
         
         // ***** TEST *****
+        System.out.println("The current workout ID is " + workoutId + ".");
         for (String exercise : workoutExercises.keySet()) {
         	System.out.println("Exercise: " + exercise + ", WSR: " + workoutExercises.get(exercise));
         }
