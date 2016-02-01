@@ -62,6 +62,7 @@ public class GainzJournalUserInterface extends JFrame {
     
     private Exercise currentExercise = new Exercise();
     private JPanel exerciseListPanel;
+    private JScrollPane scroll;
 	
     private class ButtonHandler implements ActionListener {
         @Override
@@ -459,7 +460,21 @@ public class GainzJournalUserInterface extends JFrame {
 		
 		exerciseListPanel = new JPanel();
 		exerciseListPanel.setBounds(0, 129, 438, 61);
-		panel_1.add(exerciseListPanel);
+
+		GridBagLayout gbl_exerciseListPanel = new GridBagLayout();
+		gbl_exerciseListPanel.columnWidths = new int[]{0};
+		gbl_exerciseListPanel.rowHeights = new int[]{0};
+		gbl_exerciseListPanel.columnWeights = new double[]{Double.MIN_VALUE};
+		gbl_exerciseListPanel.rowWeights = new double[]{Double.MIN_VALUE};
+		exerciseListPanel.setLayout(gbl_exerciseListPanel);
+		
+//		panel_1.add(exerciseListPanel);
+		
+		scroll = new JScrollPane(exerciseListPanel);
+		scroll.setBounds(0, 128, 431, 62);
+		scroll.setViewportView(exerciseListPanel);
+		
+		panel_1.add(scroll, exerciseListPanel);
 	}
 
 	/**
@@ -509,6 +524,7 @@ public class GainzJournalUserInterface extends JFrame {
         	exerciseListPanel.add(label, c);
         	i++;
         }
+        
         exerciseListPanel.revalidate();
         exerciseListPanel.repaint();
         
