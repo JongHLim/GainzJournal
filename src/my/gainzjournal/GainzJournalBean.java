@@ -315,32 +315,18 @@ public class GainzJournalBean {
         return w;
      }
      
-     public Exercise addMoreSetsAndReps(Exercise ex, LinkedHashMap<String, String> workoutExercises) {
+     public Exercise addMoreSetsAndReps(Exercise ex, int wid) {
     	 try {
-    		 // get name of last exercise for given id
-    		 Iterator<String> it = workoutExercises.keySet().iterator();
-    		 String lastExercise = "";
-    		 while (it.hasNext())
-    			 lastExercise = it.next();
     		 
-    		 // get current WorkoutId
-    		 int workoutId = 0;
+    		 // get the exercise that the user is trying to update
     		 try {
-    			 workoutRowSet.moveToCurrentRow();
-    			 workoutId = workoutRowSet.getInt("workoutId");
-    		 } catch (SQLException e) {
-    			 e.printStackTrace();
-    		 }
-    		 
-    		 try {
-            	exerciseRowSet.setCommand("SELECT * FROM Exercise WHERE exercise='" + lastExercise + "' "
-            			+ "AND workoutId='" + workoutId + "';");
+            	exerciseRowSet.setCommand("SELECT * FROM Exercise WHERE exercise='" + ex.getExerciseName() + "' "
+            			+ "AND workoutId='" + wid + "';");
             	exerciseRowSet.execute();
             	exerciseRowSet.next();
     		 } catch (SQLException e) {
     			e.printStackTrace();
     		 }
-    		 
     		 
     		 // update to the form 135*1*10/185*1*10
     		 if (exerciseRowSet.isAfterLast())
@@ -353,6 +339,7 @@ public class GainzJournalBean {
     		 ex.setWeightSetsReps(oldWsr + "/" + newWsr);
     		 exerciseRowSet.updateRow();
     		 exerciseRowSet.moveToCurrentRow();
+    		 
     	 } catch (SQLException exception) {
              try {
             	 exerciseRowSet.rollback();

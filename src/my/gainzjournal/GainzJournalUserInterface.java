@@ -190,14 +190,21 @@ public class GainzJournalUserInterface extends JFrame {
     		currentExercise.setWorkoutId(Integer.parseInt(workoutIdField.getText()));
     		Workout w = getFieldData();
     		
+			LinkedHashMap<String, String> workoutExercises = bean.getWorkoutExercises(justSaved);
+			String exerciseName = exerciseField.getText();
+    		
     		switch (event.getActionCommand()) {
     		
     		case "Add weight, sets, reps":
+
+    			int wid = Integer.parseInt(workoutIdField.getText());
+    			
     			if (workoutIdField.getText().equals("")) {
     				JOptionPane.showMessageDialog(null, "Please create a workout entry first.");
     				return;
     			}
-    			if (exerciseField.getText().equals("")) {
+
+    			if (exerciseName.equals("")) {
     				JOptionPane.showMessageDialog(null, "Please input the name of the exercise.");
     				return;
     			}
@@ -207,9 +214,16 @@ public class GainzJournalUserInterface extends JFrame {
                     		+ " number of sets, and number of reps for each set.");
                     return;
     			}
-    			LinkedHashMap<String, String> workoutExercises = bean.getWorkoutExercises(justSaved);
+    			
+    			// user must choose an existing exercise within the workout
+    			if (!workoutExercises.containsKey(exerciseName)) {
+    				JOptionPane.showMessageDialog(null, 
+                    		"Please choose an existing exercise from this workout entry");
+                    return;
+    			}
+    			
     			justSaved = false;
-    			if (bean.addMoreSetsAndReps(currentExercise, workoutExercises) != null) {
+    			if (bean.addMoreSetsAndReps(currentExercise, wid) != null) {
     				JOptionPane.showMessageDialog(null, "Additional weight, sets, "
     						+ "and reps added successfully.");
     				// UPDATE TREEMAP
@@ -218,6 +232,10 @@ public class GainzJournalUserInterface extends JFrame {
     			}
     			break;
     		case "Add Exercise":
+    			if (workoutExercises.containsKey(exerciseName)) {
+    				JOptionPane.showMessageDialog(null, "This exercise already exists.");
+    				return;
+    			}
     			if (workoutIdField.getText().equals("")) {
     				JOptionPane.showMessageDialog(null, "Please create a workout entry first.");
     				return;
