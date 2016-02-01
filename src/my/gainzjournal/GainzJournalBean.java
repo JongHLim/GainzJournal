@@ -14,6 +14,7 @@ import java.sql.*;
 import java.util.TreeMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 import javax.sql.rowset.JdbcRowSet;
 import com.sun.rowset.JdbcRowSetImpl;
@@ -28,7 +29,7 @@ public class GainzJournalBean {
     static final String DB_PASS = "jonghoonlim";
     private JdbcRowSet workoutRowSet = null;
     private JdbcRowSet exerciseRowSet = null;
-	private TreeMap<Integer, TreeMap<String, String>> exerciseTreeMap = new TreeMap<>();
+	private TreeMap<Integer, LinkedHashMap<String, String>> exerciseTreeMap = new TreeMap<>();
 	// to use for deleting the workouts in the database
 	private TreeMap<Integer, HashSet<Integer>> allExerciseIds = new TreeMap<>();
 	private int lastExerciseId = 0;
@@ -345,8 +346,8 @@ public class GainzJournalBean {
      }
      
      // create a TreeMap of <Workout ID, <Exercise, WeightSetsReps>>
-     public TreeMap<Integer, TreeMap<String, String>> fillExerciseMap() {
-    	 TreeMap<String, String> exercises;
+     public TreeMap<Integer, LinkedHashMap<String, String>> fillExerciseMap() {
+    	 LinkedHashMap<String, String> exercises;
     	 HashSet<Integer> exerciseIds;
     	 try {
     		 // RowSet is empty
@@ -361,7 +362,7 @@ public class GainzJournalBean {
         		 String weightSetsReps = exerciseRowSet.getString("weightSetsReps");
         		 // the TreeMap does not contain the current workout ID
         		 if (!exerciseTreeMap.containsKey(workoutId)) {
-        			 exercises = new TreeMap<>();
+        			 exercises = new LinkedHashMap<>();
         			 // add the new exercise for this workout ID
         			 exercises.put(exercise, weightSetsReps);
         			 exerciseTreeMap.put(workoutId, exercises);
@@ -398,12 +399,12 @@ public class GainzJournalBean {
     	 // *****
     	 System.out.println("updating exercise map... WSR: " + wsr);
     	 System.out.println("WORKOUT ID: " + workoutId);
-    	 TreeMap<String, String> exercises;
+    	 LinkedHashMap<String, String> exercises;
     	 if (exerciseTreeMap.containsKey(workoutId)) {
     		 exercises = exerciseTreeMap.get(workoutId);
 
     	 } else {
-    		 exercises = new TreeMap<>();
+    		 exercises = new LinkedHashMap<>();
 
     	 }
 		 exercises.put(exerciseName, wsr);
@@ -423,8 +424,8 @@ public class GainzJournalBean {
 		 allExerciseIds.put(workoutId, exerciseIds);
      }
      
-     public TreeMap<String, String> getWorkoutExercises() {
-    	 TreeMap<String, String> currentExercises;
+     public LinkedHashMap<String, String> getWorkoutExercises() {
+    	 LinkedHashMap<String, String> currentExercises;
     	 try {
 
     		 workoutRowSet.moveToCurrentRow();
@@ -434,7 +435,7 @@ public class GainzJournalBean {
     	 } catch (SQLException e) {
     		 
     	 }
-    	 currentExercises = new TreeMap<>();
+    	 currentExercises = new LinkedHashMap<>();
     	 return currentExercises;
      }
      

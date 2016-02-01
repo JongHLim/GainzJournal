@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.util.LinkedHashMap;
 import java.util.TreeMap;
 
 import javax.swing.JTextField;
@@ -35,7 +35,7 @@ public class GainzJournalUserInterface extends JFrame {
 
 	private GainzJournalBean bean = new GainzJournalBean();
 	// fill the exercise TreeMap every time the app opens
-	private TreeMap<Integer, TreeMap<String, String>> exercisesTreeMap = bean.fillExerciseMap();
+	private TreeMap<Integer, LinkedHashMap<String, String>> exercisesTreeMap = bean.fillExerciseMap();
 	
 	private JPanel contentPane;
 	private JTextField workoutDateField;
@@ -486,7 +486,7 @@ public class GainzJournalUserInterface extends JFrame {
     // list the exercises for the current workout on the exercise list panel
     private void listExercises() {
         // get all exercises for the current workout
-        TreeMap<String, String> workoutExercises = bean.getWorkoutExercises();
+    	LinkedHashMap<String, String> workoutExercises = bean.getWorkoutExercises();
         exerciseListPanel.removeAll();
         exerciseListPanel.updateUI();
         
